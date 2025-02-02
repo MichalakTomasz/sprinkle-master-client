@@ -1,18 +1,19 @@
 import { Formik } from "formik";
 import ClientTask from "../models/ClientTask";
 import TaskController from "../controllers/taskController";
+import { baseUrl } from "../models/commonConsts";
 
 const NewTask = () => {
   const onSubmit = (values) => {
     const clientTask = new ClientTask(0, values.name, values.start, values.stop, values.period, values.pinNo, values.state, values.isActive)
     const taskController = new TaskController()
-    taskController.addTask('url', clientTask)
+    taskController.addTask(baseUrl, clientTask)
   }
 
   return (
     <>
       <h1>Add Task</h1>
-      <Formik initialValues={{ name: "", start: null, stop: null, period: null, pinNo: 0, state: 0, isActive: false }} onSubmit={onSubmit}>
+      <Formik initialValues={{ name: "", start: "", stop: "", period: "", pinNo: 0, state: 0, isActive: false }} onSubmit={onSubmit}>
         {({ handleSubmit, handleChange, values }) => (
           <form onSubmit={handleSubmit}>
              
