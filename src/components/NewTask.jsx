@@ -1,13 +1,12 @@
 import { Formik } from "formik";
 import ClientTask from "../models/ClientTask";
 import TaskController from "../controllers/taskController";
-import { baseUrl } from "../models/commonConsts";
 
 const NewTask = () => {
   const onSubmit = (values) => {
     const clientTask = new ClientTask(0, values.name, values.start, values.stop, values.period, values.pinNo, values.state, values.isActive)
     const taskController = new TaskController()
-    taskController.addTask(baseUrl, clientTask)
+    taskController.addTask(clientTask)
   }
 
   return (

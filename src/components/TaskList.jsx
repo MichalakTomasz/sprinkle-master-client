@@ -1,13 +1,12 @@
-import { useEffect, useState } from "react"
-import TaskController from "../controllers/taskController"
-import { baseUrl } from '../models/commonConsts'
+import { useEffect, useState } from 'react'
+import TaskController from '../controllers/taskController'
 
 const TaskList = () => {
     const [tasks, setTasks] = useState()
     const [error, setError] = useState()
     const taskController = new TaskController()
     const refreshTasks = async () => {
-        const tasks = await taskController.getTasks(baseUrl)
+        const tasks = await taskController.getTasks()
         if (Array.isArray(tasks))
             setTasks(tasks)
         else{
@@ -18,20 +17,13 @@ const TaskList = () => {
     useEffect(() => {
         refreshTasks()
     })
-    const onUpdateTask = async (task) => {
-        try{
-            await taskController.updateTask(baseUrl, task)
-            await refreshTasks()
-        }
-        catch(e){
-            console.log(e)
-            setError(e.message)
-        }
+    const onUpdateTask = async () => {
         
     }
+
     const onDeleteTask = async (id) => {
         try{
-            await taskController.deleteTask(baseUrl + id)
+            await taskController.deleteTask(id)
             await refreshTasks()
         }
         catch(e){
@@ -52,7 +44,7 @@ const TaskList = () => {
                     <div>{t.pinNo}</div>
                     <div>{t.isActive}</div>
                     <button onClick={onUpdateTask}>Update Task</button>
-                    <button onClick={onDeleteTask}>Delete Task</button>
+                    <button onClick={onDeleteTask(t.id)}>Delete Task</button>
                 </div>))  :
                 <div>{error}</div>  
             }
