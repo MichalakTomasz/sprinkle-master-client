@@ -1,5 +1,5 @@
-import NewTask from "./NewTask"
-import TaskList from "./TaskList"
+import MainMenu from "./MainMenu.jsx"
+import NewTask from "./TaskForm.jsx"
 
 const Dashboard = () => {
     return (
@@ -8,8 +8,7 @@ const Dashboard = () => {
         <nav/>
         <div>
             <div>
-                <h2>States</h2>
-                <TaskList/>
+                <MainMenu/>
             </div>
             <div>
                 <h2>Add task</h2>

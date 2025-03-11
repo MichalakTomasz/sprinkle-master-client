@@ -1,12 +1,11 @@
 import Nav from './components/Nav'
-
+import { Box } from '@mui/material'
 const App = () => {
 
   return (
-    <>
-      <h1>Welcome to Green Care</h1>
+    <Box sx={{ width: '100%'}}>
       <Nav/>
-    </>
+    </Box>
       
   )
 }
