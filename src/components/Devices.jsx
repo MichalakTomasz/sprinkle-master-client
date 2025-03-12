@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import Device from "./Device.jsx";
-import { devices } from "../setup/mock-data.js";
+import { valves } from "../setup/mock-data.js";
 
 const Devices = () => {
   return (
@@ -11,7 +11,7 @@ const Devices = () => {
             flexWrap: "wrap",
             rowGap: 2
         }}>
-      {devices.map((device) => (
+      {valves.map((device) => (
         <Device key={device.id} device={device} />
       ))}
     </Stack>

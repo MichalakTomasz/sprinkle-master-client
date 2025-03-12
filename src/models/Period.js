@@ -1,12 +1,12 @@
 const Period = {
-    EVERYDAY: 'Everyday',
-    MONDAY: 'Monday',
+    EVERYDAY: 'EVERYDAY',
+    MONDAY: 'MONDAY',
     TUESDAY: 'Tuesday',
-    WEDNSDAY: 'Wednesday',
-    THURSDAY: 'Thursday',
-    FRIDAY: 'Friday',
-    SATERDAY: 'Saterday',
-    SUNDAY: 'Sunday'
+    WEDNSDAY: 'TUESDAY',
+    THURSDAY: 'THURSDAY',
+    FRIDAY: 'FRIDAY',
+    SATERDAY: 'SATERDAY',
+    SUNDAY: 'SUNDAY'
 }
 
 export default Period

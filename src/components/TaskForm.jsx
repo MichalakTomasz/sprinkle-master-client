@@ -1,34 +1,33 @@
-import { Box, TextField, Button, Switch, FormControlLabel, Select, MenuItem } from '@mui/material'
+import { Box, TextField, Button, Switch, FormControlLabel } from '@mui/material'
 import { useFormik } from "formik"
 import ClientTask from "../models/ClientTask"
 import TaskController from "../controllers/taskController"
+import Period from '../models/Period.js'
 
-const TaskForm = () => {
-  const periodOptions = [
-    { value: 'EVERYDAY', label: 'Every day' },
-    { value: 'MONDAY', label: 'Monday' },
-    { value: 'TUESDAY', label: 'Tuesday' },
-    { value: 'WEDNSDAY', label: 'Wednesday' },
-    { value: 'THURSDAY', label: 'Thursday' },
-    { value: 'FRIDAY', label: 'Friday' },
-    { value: 'SATERDAY', label: 'Saterday' },
-    { value: 'SUNDAY', label: 'Sunday' }
-  ];
+const TaskForm = ( { task }) => {
+  
+  const isUpdate = task != undefined
 
   const onSubmit = (values) => {
-    const clientTask = new ClientTask(0, values.name, values.pinNo, values.start, values.stop, values.period, values.isActive)
-    const taskController = new TaskController()
-    taskController.addTask(clientTask)
+
+    if (isUpdate) {
+
+    } else {
+      const clientTask = new ClientTask(0, values.name, values.pinNo, values.start, values.stop, values.period, values.isActive)
+      const taskController = new TaskController()
+      taskController.addTask(clientTask)
+    }
+    
   }
 
   const formik = useFormik({
     initialValues: {
-      id: 0,
-      name: '',
-      start: '',
-      stop: '',
-      period:'',
-      isActive: false
+      id: isUpdate ? task.id : 0,
+      name: isUpdate ? task.name : '',
+      start: isUpdate ? task.start : '',
+      stop: isUpdate ? task.stop : '',
+      period: Period.EVERYDAY,
+      isActive: isUpdate ? task?.isActive : false
     },
     onSubmit: onSubmit
   })
@@ -73,18 +72,6 @@ const TaskForm = () => {
                 shrink: true,
               }}
             />
-            <Select
-              label="Period"
-              name="period"
-              value={formik.values.period}
-              onChange={formik.handleChange}
-            >
-              {periodOptions.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              ))}
-            </Select>      
             <FormControlLabel
               control={
                 <Switch
@@ -95,7 +82,7 @@ const TaskForm = () => {
               }
               label="Active"
             />
-            <Button variant="outlined" type="submit">Add</Button>
+            <Button variant="outlined" type="submit">{isUpdate ? 'Update' : 'Add'}</Button>
       </Box>
     </>
   )

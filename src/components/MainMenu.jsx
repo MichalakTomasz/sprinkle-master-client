@@ -10,17 +10,18 @@ const MainMenu = () => {
   return (
     <TabContext value={value}>
       <TabList onChange={handleChange}>
-        <Tab label="Devices" value="1" />
+        <Tab label="Valves" value="1" />
         <Tab label="Tasks" value="2" />
       </TabList>
       <TabPanel value="1">
-        <DevicePanel/>
+        <DevicePanel deviceType='Valve'/>
       </TabPanel>      
       <TabPanel value="2">
         <TaskPanel/>
       </TabPanel>
     </TabContext>
-  );
-};
+  )
+}
+
 
 export default MainMenu;

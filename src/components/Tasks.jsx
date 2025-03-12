@@ -4,9 +4,7 @@ import { tasks } from "../setup/mock-data.js";
 
 const Tasks = () => {
   return (
-    <Stack 
-    direction="row" 
-    spacing={2}
+    <Stack direction="row" spacing={2}
     sx={{
         flexWrap: "wrap",
         rowGap: 2

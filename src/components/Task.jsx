@@ -4,12 +4,14 @@ import {
     CardActions, 
     Typography, 
     Switch, 
-    Button 
+    Button,
+    Box 
 } from "@mui/material";
-import  { Edit, Delete }  from "@mui/icons-material"
+import { Edit, Delete } from "@mui/icons-material"
 import Device from './Device.jsx'
 import { useState } from 'react'
-import TaskDialog from './taskDialog'
+import TaskDialog from './TaskDialog'
+import PinState from '../models/PinState.js'
 
 const Task = ({ task }) => {
     const [open, setOpen] = useState(false)
@@ -25,39 +27,59 @@ const Task = ({ task }) => {
     }
 
     const onDeleteClick = () => {
-
+        // Add delete logic here
     }
 
     return (
-        <Card key={task.id} sx={{ minWidth: 275, margin: 2 }}>
-            <CardContent>
+        <Card sx={{ minWidth: 275, margin: 2 }}>
+          <CardContent>
+            <Box>
                 <Typography variant="h5" component="div" gutterBottom>
                     {task.name}
                 </Typography>
-                <Typography variant="body1">
-                    State: <Switch checked={task.isActive} />
-                </Typography>
-                <Typography variant="body2">
+                <Box display="flex" alignItems="center" gap={1}>
+                    <Typography component="span">State:</Typography>
+                    <Switch checked={task.state == PinState.HIGH} />
+                </Box>
+                <Typography component="div">
                     Start: {task.start}
                 </Typography>
-                <Typography variant="body2">
+                <Typography component="div">
                     Stop: {task.stop}
                 </Typography>
-                <Typography variant="body2">
-                    Period: {task.period}
-                </Typography>
-                <Typography variant="body2" gutterBottom>
-                    Active: <Switch checked={task.isActive} />
-                </Typography>
+                <Box display="flex" alignItems="center" gap={1}>
+                    <Typography component="span">Active:</Typography>
+                    <Switch checked={task.isActive} />
+                </Box>
+            </Box>
+            <Box mt={2}>
                 {task.devices?.map((device) => (
                     <Device key={device.id} device={device} />
                 ))}
-            </CardContent>
+            </Box>
             <CardActions>
-                <Button onClick={onEditClick} variant="outlined" startIcon={<Edit/>}>Edit</Button>
-                <Button onClick={onDeleteClick} variant="outlined" startIcon={<Delete/>}>Delete</Button>
-                <TaskDialog title={title} task={task} open={open} onClose={handleClose}/>
+                <Button 
+                    onClick={onEditClick} 
+                    variant="outlined" 
+                    startIcon={<Edit/>}
+                >
+                    Edit
+                </Button>
+                <Button 
+                    onClick={onDeleteClick} 
+                    variant="outlined" 
+                    startIcon={<Delete/>}
+                >
+                    Delete
+                </Button>
+                <TaskDialog 
+                    title={title} 
+                    task={task} 
+                    open={open} 
+                    onClose={handleClose}
+                />
             </CardActions>
+          </CardContent>
         </Card>
     )
 }

@@ -3,9 +3,9 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogTitle from "@mui/material/DialogTitle";
 import Button from "@mui/material/Button"
-import TaskForm from './TaskForm.jsx'
+import DeviceForm from './DeviceForm.jsx'
 
-const TaskDialog = ({title, task, open, onClose }) => {
+const TaskDialog = ({title, device, open, onClose }) => {
   const onSubmit = (event) => {
     event.preventDefault();
     onclose();
@@ -17,7 +17,7 @@ const TaskDialog = ({title, task, open, onClose }) => {
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <TaskForm task={task}/>
+        <DeviceForm task={device}/>
       </DialogContent>
 
       <DialogActions>

@@ -1,5 +1,6 @@
 import MainMenu from "./MainMenu.jsx"
-import NewTask from "./TaskForm.jsx"
+import StatusBar from "./StatusBar.jsx"
+import DeviceStatus from './DeviceStatus.jsx'
 
 const Dashboard = () => {
     return (
@@ -8,11 +9,13 @@ const Dashboard = () => {
         <nav/>
         <div>
             <div>
+                <DeviceStatus/>
+            </div>
+            <div>
                 <MainMenu/>
             </div>
             <div>
-                <h2>Add task</h2>
-                <NewTask/>
+                <StatusBar/>
             </div>
         </div>
         </>

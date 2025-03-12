@@ -10,10 +10,12 @@ const Settings = settings => {
             <CardContent>
                 <Typography>
                     Autostart Scheduler: {settings.autostartScheduler}
-                    Pump stop delay: {settings.pumpStopDelay}
-                    Scheduler tick: {settings.schedulerTick}
                 </Typography>
                 <Typography>
+                    Pump stop delay: {settings.pumpStopDelay}
+                </Typography>
+                <Typography>
+                    Scheduler tick: {settings.schedulerTick}
                 </Typography>
             </CardContent>
         </Card>
