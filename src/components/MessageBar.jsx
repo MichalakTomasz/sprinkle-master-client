@@ -6,7 +6,7 @@ import {
     Stack
 } from '@mui/material'
 
-const StatusBar = ({ messages }) => {
+const MessageBar = ({ messages }) => {
     return (
         <Box sx={{ position: 'relative', mt: 3, mb: 3 }}>
             <Typography
@@ -31,4 +31,4 @@ const StatusBar = ({ messages }) => {
     )
 }
 
-export default StatusBar
+export default MessageBar

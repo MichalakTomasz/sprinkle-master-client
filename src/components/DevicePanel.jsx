@@ -20,7 +20,7 @@ const DevicePanel = ({ deviceType }) => {
         <>
             <Button onClick={onClick} variant="outlined" startIcon={<Add/>} sx={{m:2}}>Add {deviceType}</Button>
             <Devices />
-            <DeviceDialog title={title}open={open} onClose={handleClose} />
+            <DeviceDialog title={title} open={open} onClose={handleClose} />
         </>
     )
 }

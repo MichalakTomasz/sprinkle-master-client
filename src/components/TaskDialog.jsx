@@ -8,7 +8,7 @@ import TaskForm from './TaskForm.jsx'
 const TaskDialog = ({title, task, open, onClose }) => {
   const onSubmit = (event) => {
     event.preventDefault();
-    onclose();
+    onClose();
   };
   return (
     <Dialog
@@ -24,7 +24,6 @@ const TaskDialog = ({title, task, open, onClose }) => {
         <Button onClick={onSubmit} type="submit">
           Ok
         </Button>
-        <Button onClick={onClose}>Cancel</Button>
       </DialogActions>
     </Dialog>
   );
