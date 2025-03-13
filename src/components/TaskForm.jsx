@@ -1,7 +1,7 @@
 import { Box, TextField, Button, Switch, FormControlLabel } from '@mui/material'
 import { useFormik } from "formik"
 import ClientTask from "../models/ClientTask"
-import TaskController from "../controllers/taskController"
+import TaskController from "../controllers/MainController.js"
 import Period from '../models/Period.js'
 
 const TaskForm = ( { task }) => {
