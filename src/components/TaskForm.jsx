@@ -1,7 +1,5 @@
 import { Box, TextField, Button, Switch, FormControlLabel } from '@mui/material'
 import { useFormik } from "formik"
-import ClientTask from "../models/ClientTask"
-import TaskController from "../controllers/MainController.js"
 import Period from '../models/Period.js'
 
 const TaskForm = ( { task }) => {
@@ -13,9 +11,6 @@ const TaskForm = ( { task }) => {
     if (isUpdate) {
 
     } else {
-      const clientTask = new ClientTask(0, values.name, values.pinNo, values.start, values.stop, values.period, values.isActive)
-      const taskController = new TaskController()
-      taskController.addTask(clientTask)
     }
     
   }

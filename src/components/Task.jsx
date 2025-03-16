@@ -5,15 +5,18 @@ import {
     Typography, 
     Switch, 
     Button,
-    Box 
+    Box, 
+    Stack
 } from "@mui/material";
-import { Edit, Delete } from "@mui/icons-material"
-import Device from './Device.jsx'
+import { Edit, Delete, InvertColors, InvertColorsOff } from "@mui/icons-material"
+import SimpleDevice from './SimpleDevice.jsx'
 import { useState } from 'react'
 import TaskDialog from './TaskDialog'
-import PinState from '../models/PinState.js'
+import PinState from "../models/PinState.js";
+import container from "../container/container.js";
 
 const Task = ({ task }) => {
+    const dataManager = container.resolve('dataManager')
     const [open, setOpen] = useState(false)
     const [title, setTitle] = useState('')
 
@@ -30,6 +33,20 @@ const Task = ({ task }) => {
         // Add delete logic here
     }
 
+    const onOpenClick = async () => {
+        await dataManager.setTaskState({
+            id: task.id,
+            state: PinState.HIGH
+        })
+    }
+
+    const onCloseClick = async () => {
+        await dataManager.setTaskState({
+            id: task.id,
+            state: PinState.LOW
+        })
+    }
+
     return (
         <Card sx={{ minWidth: 275, margin: 2 }}>
           <CardContent>
@@ -37,9 +54,11 @@ const Task = ({ task }) => {
                 <Typography variant="h5" component="div" gutterBottom>
                     {task.name}
                 </Typography>
-                <Box display="flex" alignItems="center" gap={1}>
-                    <Typography component="span">State:</Typography>
-                    <Switch checked={task.state == PinState.HIGH} />
+                <Box display="flex" alignItems="center">
+                    <Stack spacing={2} direction='row' alignItems="center">
+                        <Button onClick={onCloseClick} startIcon={<InvertColorsOff/>}>Close</Button>
+                        <Button onClick={onOpenClick} startIcon={<InvertColors/>}>Open</Button>
+                    </Stack>                    
                 </Box>
                 <Typography component="div">
                     Start: {task.start}
@@ -54,7 +73,7 @@ const Task = ({ task }) => {
             </Box>
             <Box mt={2}>
                 {task.devices?.map((device) => (
-                    <Device key={device.id} device={device} />
+                    <SimpleDevice key={device.id} device={device} />
                 ))}
             </Box>
             <CardActions>

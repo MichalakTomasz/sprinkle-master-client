@@ -1,6 +1,6 @@
 import MainMenu from "./MainMenu.jsx";
 import MessageBar from "./MessageBar.jsx";
-import DeviceStatus from "./DeviceStatus.jsx";
+import DeviceStatuses from "./DeviceStatuses.jsx";
 import OperationPanel from "./OperationPanel.jsx";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { Settings } from "@mui/icons-material";
@@ -26,7 +26,7 @@ const Dashboard = () => {
 
       <Stack spacing={2}>
         <Box>
-          <DeviceStatus />
+          <DeviceStatuses />
         </Box>
         <Box>
           <OperationPanel />

@@ -1,12 +1,34 @@
 import { Card, Button, Switch, Typography, Box, Stack } from "@mui/material";
 import FlashOffIcon from "@mui/icons-material/FlashOff";
-import { useState } from "react";
+import { useEffect } from "react";
+import container from "../container/container";
+import useDeviceStore from "../store/deviceStore.js";
 
 const OperationPanel = () => {
-  const [isSchedulerEnabled, setIsSchedulerEnabled] = useState(false);
+  const dataManager = container.resolve('dataManager')
+  const isSchedulerEnabled = useDeviceStore(state => state.isSchedulerEnabled)
+  
+  useEffect(() => {
+    const fetchIsSchedulerEnabled = async() => {
+      await dataManager.refreshIsSchedulerEnabled()
+    }
+    
+    fetchIsSchedulerEnabled()
+    
+  }, [])
 
-  const onSchedulerEnableChange = () => {
-    setIsSchedulerEnabled(!isSchedulerEnabled);
+  const onCloseAllClick = () => {
+     dataManager.closeAll()
+  }
+
+  const onSchedulerEnableChange = async () => {
+    if (isSchedulerEnabled){
+      dataManager.stopScheduler()
+    } else {
+      await dataManager.runScheduler()
+    }
+    
+    await dataManager.refreshIsSchedulerEnabled()
   };
 
   return (
@@ -19,7 +41,7 @@ const OperationPanel = () => {
           />
           <Typography>Scheduler</Typography>
         </Box>
-        <Button variant="outlined" startIcon={<FlashOffIcon />} sx={{ m: 2 }}>
+        <Button onClick={onCloseAllClick} variant="outlined" startIcon={<FlashOffIcon />} sx={{ m: 2 }}>
           Close all
         </Button>
       </Stack>

@@ -1,34 +1,29 @@
-import { Stack } from "@mui/material";
-import Task from "./Task.jsx";
-import { useState, useEffect } from 'react'
-import container from "../container/container.js";
+import { Grid } from "@mui/material"
+import Task from "./Task"
+import useDeviceStore from '../store/deviceStore'
+import { useEffect } from 'react'
+import container from "../container/container.js"
 
 const Tasks = () => {
-  const controller = container.resolve('mainController')
-  const [tasks, setTasks] = useState()
+  const dataManager = container.resolve("dataManager")
+  const tasks = useDeviceStore((state) => state.tasks || [])
 
   useEffect(() => {
-    const getTasks = async () => {
-      const result = await controller.getTasks()
-      if (result) {
-        setTasks(result)
-      }
+    const fetchData = async () => {
+      await dataManager.refreshTasks()
     }
-
-    getTasks()
+    fetchData()
   }, [])
 
   return (
-    <Stack direction="row" spacing={2}
-    sx={{
-        flexWrap: "wrap",
-        rowGap: 2
-    }}>
-      {tasks?.map((task) => (
-        <Task key={task.id} task={task} />
+    <Grid container spacing={2}>
+      {Array.isArray(tasks) && tasks.map((task) => (
+        <Grid key={task.id}>
+          <Task task={task} />
+        </Grid>
       ))}
-    </Stack>
-  );
-};
+    </Grid>
+  )
+}
 
-export default Tasks;
+export default Tasks

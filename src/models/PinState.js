@@ -1,4 +1,5 @@
 const PinState = {
+    UNDEFINED: 'UNDEFINED',
     HIGH: 'HIGH',
     LOW: 'LOW'
 }
