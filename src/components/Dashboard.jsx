@@ -34,9 +34,6 @@ const Dashboard = () => {
         <Box>
           <MainMenu />
         </Box>
-        <Box>
-          <MessageBar />
-        </Box>
       </Stack>
     </Stack>
   );

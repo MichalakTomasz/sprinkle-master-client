@@ -133,7 +133,9 @@ const TaskForm = ({ task }) => {
   }
 
   const onChangeValveSelect = (event) => {
-    setSelectedValve(event.target.value);
+    const selectedValveId = event.target.value;
+    const selectedValve = valves.find(v => v.id === selectedValveId);
+    setSelectedValve(selectedValve);
   }
 
   const onClickAddValve = async () => {
@@ -215,7 +217,7 @@ const TaskForm = ({ task }) => {
         </Box>
         <Stack direction="row" spacing={2} alignItems="center">
           <Select
-            value={selectedValve}
+            value={selectedValve ? selectedValve.id : ''}
             onChange={onChangeValveSelect}
             displayEmpty
             sx={{ minWidth: 200 }}
@@ -226,7 +228,7 @@ const TaskForm = ({ task }) => {
             {valves
               ?.filter((v) => !currentDevices?.some((d) => v.id == d.id))
               .map((valve) => (
-                <MenuItem key={valve.id} value={valve}>
+                <MenuItem key={valve.id} value={valve.id}>
                   {valve.name}
                 </MenuItem>
               ))}

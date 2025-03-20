@@ -1,9 +1,11 @@
-import useDeviceStore from '../store/deviceStore'
-import convertPinState from '../helpers/convertPinState'
+import useDeviceStore from '../store/deviceStore.js'
+import convertPinState from '../helpers/convertPinState.js'
+import { repeatTask } from '../helpers/asyncHelper.js'
 
 export class DataManager {
     constructor({ mainController }) {
         this.controller = mainController
+        this.#initStateChecker()
     }
     
     refreshTasks = async () => {
@@ -72,6 +74,17 @@ export class DataManager {
 
     getSettings = async () => await this.controller.getSettings()
     setSettings = async settings => await this.controller.setSettings(settings)
+
+    #initStateChecker = () => {
+        repeatTask(this.#checkStateCallback, 1000)
+    }
+
+    #checkStateCallback = () => {
+        this.refreshPump()
+        this.refreshValves()
+        this.refreshTasks()
+        this.refreshIsSchedulerEnabled()
+    }
 }
 
 export default DataManager
