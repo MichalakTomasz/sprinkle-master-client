@@ -15,7 +15,7 @@ import {
   InvertColorsOff,
 } from "@mui/icons-material";
 import SimpleDevice from "./SimpleDevice.jsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskDialog from "./TaskDialog";
 import PinState from "../models/PinState.js";
 import container from "../container/container.js";
@@ -26,6 +26,11 @@ const Task = ({ task }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isActiveState, setIsActiveState] = useState(false);
+
+  useEffect(() => {
+    setIsActiveState(task?.isActive ?? false);
+  }, []);
 
   const onClickClose = () => {
     setOpen(false);
@@ -66,6 +71,23 @@ const Task = ({ task }) => {
     setConfirmDelete(false);
   };
 
+  const onClickCheckedChange = async () => {
+    
+    const updateResult = await dataManager.updateTask({
+      id: task.id,
+      name: task.name,
+      start: task.start,
+      stop: task.stop,
+      period: task.period,
+      isActive: !isActiveState,
+    });
+
+    if (updateResult) {
+        setIsActiveState(updateResult?.result?.isActive)
+        console.log(updateResult)
+    }
+  };
+
   return (
     <>
       <Card sx={{ minWidth: 275, margin: 2 }}>
@@ -88,7 +110,7 @@ const Task = ({ task }) => {
             <Typography component="div">Stop: {task.stop}</Typography>
             <Box display="flex" alignItems="center" gap={1}>
               <Typography component="span">Active:</Typography>
-              <Switch checked={task.isActive} />
+              <Switch checked={isActiveState} onChange={onClickCheckedChange} />
             </Box>
           </Box>
           <Box mt={2}>

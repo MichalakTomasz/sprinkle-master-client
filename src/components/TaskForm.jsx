@@ -49,15 +49,16 @@ const TaskForm = ({ task }) => {
         setApiResult({
           message: `Update Task error: ${updateResult?.message}`,
           severity: updateResult?.isSuccess ? "success" : "error",
-        });
+        })
       }
+
       const devicesToAdd = currentDevices?.filter(
         (c) => !task?.devices?.some((d) => d.id == c.id)
-      );
+      )
 
       const devicesToDelete = task?.devices?.filter(
         (d) => !currentDevices?.some((c) => d.id == c.id)
-      );
+      )
 
       if (devicesToAdd) {
         for (const deviceToAdd of devicesToAdd) {
