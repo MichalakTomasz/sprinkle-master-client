@@ -19,10 +19,9 @@ const TaskDialog = ({title, task, open, onClose }) => {
       <DialogContent>
         <TaskForm task={task}/>
       </DialogContent>
-
       <DialogActions>
         <Button onClick={onSubmit} type="submit">
-          Ok
+          Close
         </Button>
       </DialogActions>
     </Dialog>

@@ -13,9 +13,10 @@ const DevicePanel = ({ deviceType }) => {
     }
     
     const onClick = () => {
-        setTitle("Add")
+        setTitle("Add Valve")
         setOpen(true)
     }
+    
     return (
         <>
             <Button onClick={onClick} variant="outlined" startIcon={<Add/>} sx={{m:2}}>Add {deviceType}</Button>

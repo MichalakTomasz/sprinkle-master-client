@@ -13,7 +13,7 @@ const DevicesPanel = () => {
     
     }
     const onClick = () => {
-        setTitle("Add")
+        setTitle("Add Task")
         setOpen(true)
     }
     return (

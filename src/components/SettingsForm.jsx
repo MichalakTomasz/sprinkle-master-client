@@ -4,17 +4,113 @@ import {
   Button,
   Switch,
   FormControlLabel,
+  Alert,
 } from "@mui/material";
 import { useFormik } from "formik";
+import * as Yup from "yup";
+import { useEffect, useState } from "react";
+import container from "../container/container";
+import Settings from "../models/Settings.js";
+
+const initialValues = {
+  autostartScheduler: false,
+  pumpStopDelay: 0,
+  schedulerTick: 0,
+  pumpPinNo: 0,
+};
+
+const validationSchema = Yup.object({
+  pumpStopDelay: Yup.number()
+    .min(
+      0,
+      "Delay between stop Pump and Valve can not be smaller than 0 seconds."
+    )
+    .max(5, "5 seconda is max delay between stop Pump and Valve.")
+    .required("Required"),
+  schedulerTick: Yup.number()
+    .min(1, "Must be greater than or equal to 1")
+    .max(60, "Must be less than or equal to 60")
+    .required("Required"),
+  pumpPinNo: Yup.number()
+    .min(0, "Must be greater than or equal to 0")
+    .max(40, "Must be less than or equal to 40")
+    .required("Required"),
+});
 
 const SettingsForm = () => {
-  const onSubmit = () => {};
+  const dataManager = container.resolve("dataManager");
+  const [formValues, setFormValues] = useState(initialValues);
+  const [apiResult, setApiResult] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const settingsResult = await dataManager.getSettings();
+      const pumpResult = await dataManager.getPump();
+
+      if (settingsResult) {
+        const autostartScheduler = settingsResult?.find(
+          (s) => s.key == Settings.autostartScheduler
+        )?.value;
+        const pumpStopDelay = settingsResult?.find(
+          (s) => s.key == Settings.pumpStopDelay
+        )?.value;
+        const schedulerTick = settingsResult?.find(
+          (s) => s.key == Settings.schedulerTick
+        )?.value;
+
+        setFormValues({
+          autostartScheduler: Boolean(autostartScheduler || false),
+          pumpStopDelay: pumpStopDelay ? pumpStopDelay / 1000 : 0,
+          schedulerTick: schedulerTick ? schedulerTick / 1000 : 0,
+          pumpPinNo: pumpResult?.pinNo || 0,
+        });
+      }
+    };
+
+    fetchData();
+  }, [dataManager]);
+
+  const onSubmit = async (values) => {
+    try {
+      setApiResult(null);
+      const setSettingsResult = await dataManager.setSettings([
+        { key: Settings.autostartScheduler, value: values.autostartScheduler },
+        { key: Settings.pumpStopDelay, value: values.pumpStopDelay * 1000 },
+        { key: Settings.schedulerTick, value: values.schedulerTick * 1000 },
+      ]);
+
+      if (setSettingsResult) {
+        setApiResult({
+          message:`Save settings error: ${setSettingsResult?.message}`,
+          severity: setSettingsResult?.isSuccess ? 'success': 'error'
+        });
+      }
+      
+      if (setSettingsResult?.isSuccess) {
+        const updatePumpResult = await dataManager.updatePump({
+          pinNo: values.pumpPinNo,
+        });
+  
+        if (updatePumpResult) {
+          setApiResult( {
+            message: `Save pinNo  error: ${updatePumpResult?.message}`,
+            severity: updatePumpResult?.isSuccess ? 'success': 'error'
+          });
+        }
+      }
+      
+    } catch (e) {
+      setApiResult({
+        message: `Error while saving settings: ${e.message}`,
+        severity: 'error'
+      });
+    }
+  };
+
   const formik = useFormik({
-    initialValues: {
-      autostartScheduler: true,
-      pumpStopDelay: 3,
-      schedulerTick: 3,
-    },
+    initialValues: formValues,
+    enableReinitialize: true,
+    validationSchema: validationSchema,
     onSubmit: onSubmit,
   });
 
@@ -47,6 +143,12 @@ const SettingsForm = () => {
           name="pumpStopDelay"
           value={formik.values.pumpStopDelay}
           onChange={formik.handleChange}
+          error={
+            formik.touched.pumpStopDelay && Boolean(formik.errors.pumpStopDelay)
+          }
+          helperText={
+            formik.touched.pumpStopDelay && formik.errors.pumpStopDelay
+          }
           InputLabelProps={{
             shrink: true,
           }}
@@ -57,6 +159,24 @@ const SettingsForm = () => {
           name="schedulerTick"
           value={formik.values.schedulerTick}
           onChange={formik.handleChange}
+          error={
+            formik.touched.schedulerTick && Boolean(formik.errors.schedulerTick)
+          }
+          helperText={
+            formik.touched.schedulerTick && formik.errors.schedulerTick
+          }
+          InputLabelProps={{
+            shrink: true,
+          }}
+        />
+        <TextField
+          label="Pump GPIO pin number"
+          type="number"
+          name="pumpPinNo"
+          value={formik.values.pumpPinNo}
+          onChange={formik.handleChange}
+          error={formik.touched.pumpPinNo && Boolean(formik.errors.pumpPinNo)}
+          helperText={formik.touched.pumpPinNo && formik.errors.pumpPinNo}
           InputLabelProps={{
             shrink: true,
           }}
@@ -64,6 +184,13 @@ const SettingsForm = () => {
         <Button variant="outlined" type="submit">
           Update
         </Button>
+        {apiResult && (
+          <Alert severity={apiResult.severity} sx={{ mt: 2 }}>
+            {apiResult.severity == 'success' ?
+            'Update settings successful.': 
+            apiResult.message}
+          </Alert>
+        )}
       </Box>
     </>
   );

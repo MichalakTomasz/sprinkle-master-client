@@ -10,7 +10,7 @@ const DeviceState = ({ device }) => {
     return (
         <Card>
             <CardContent>
-                <Stack alignItems="center">
+                <Stack  alignItems="center" >
                     <Typography>{device.name}</Typography>
                     <CircleIndicator isActive={deviceState} />
                 </Stack>    

@@ -14,7 +14,8 @@ export class DataManager {
     addTask = async task => await this.controller.addTask(task)
     updateTask = async task => await this.controller.updateTask(task)
     deleteTask = async id => await this.controller.deleteTask(id)
-    assingToTask = async assignJson => await this.controller.assignToTask(assignJson)
+    assignToTask = async assignJson => await this.controller.assignToTask(assignJson)
+    unassignFromTask = async assignJson => await this.controller.unassignFromTask(assignJson)
     
     setTaskState = async stateJson => {
         const changeTaskStateResult = await this.controller.setTaskState(stateJson)
@@ -45,13 +46,13 @@ export class DataManager {
 
     refreshPump = async () => {
         const result = await this.controller.getPump()
-        if (result.isSuccess) {
-            const pump = result.result
+        if (result) {
+            const pump = result
             useDeviceStore.getState().setPump(pump)
             useDeviceStore.getState().setDeviceState(pump.id, convertPinState(pump.state))
         }
     }
-    
+    getPump = async () => await this.controller.getPump()
     addPump = async pinNoJson => await this.controller.addPump(pinNoJson)
     updatePump = async pinNoJson => await this.controller.updatePump(pinNoJson)
     deletePump = async () => await this.controller.deletePump()
@@ -69,8 +70,8 @@ export class DataManager {
         await this.controller.stopScheduler()
     }
 
-    getSettings = async () => await this.getSettings()
-    setSettings = async settings => await this.setSettings(settings)
+    getSettings = async () => await this.controller.getSettings()
+    setSettings = async settings => await this.controller.setSettings(settings)
 }
 
 export default DataManager

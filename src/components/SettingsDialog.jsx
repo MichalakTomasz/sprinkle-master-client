@@ -22,7 +22,7 @@ const SettingsDialog = ({ open, onClose }) => {
 
       <DialogActions>
         <Button onClick={onSubmit} type="submit">
-          Ok
+          Close
         </Button>
       </DialogActions>
     </Dialog>

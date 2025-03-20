@@ -18,12 +18,12 @@ const TaskDialog = ({title, device, open, onClose }) => {
     >
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
-        <DeviceForm task={device}/>
+        <DeviceForm device={device}/>
       </DialogContent>
 
       <DialogActions>
         <Button onClick={onSubmit} type="submit">
-          Ok
+          Close
         </Button>
       </DialogActions>
     </Dialog>

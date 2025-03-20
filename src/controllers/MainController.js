@@ -19,15 +19,15 @@ export default class MainController {
 
             return result
         }
-        catch(e){
-            console.log(JSON.stringify(e))
-            return e.message
+        catch(e) {
+            console.error(e.message)
+            return []
         }
     }
 
     addTask = async (task) => {
         try{
-            const data = await fetch(this.baseUrl + 'gpio/addTask', {
+            const data = await fetch(this.baseUrl + 'gpio/task', {
                 method: 'POST',
                 headers: { 'Content-type': 'application/json'},
                 body: JSON.stringify(task)
@@ -35,14 +35,17 @@ export default class MainController {
             return data?.json()
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return {
+                isSuccess: false,
+                message: `Add Task error: ${e.message}`
+            }
         }
     }
 
-
     updateTask = async (task) => {
         try{
-            const data = await fetch(this.baseUrl + 'updateTask', {
+            const data = await fetch(this.baseUrl + 'gpio/task', {
                 method: 'PATCH',
                 headers: { 'Content-type': 'application/json'},
                 body: JSON.stringify(task)
@@ -51,20 +54,28 @@ export default class MainController {
             return data?.json()
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return {
+                isSuccess: false,
+                message: `Update Task error: ${e.message}`
+            }
         }
     }
     
     deleteTask = async (id) => {
         try{
-            const data = await fetch(this.baseUrl + 'gpio/deleteTask/' + id, { 
+            const data = await fetch(this.baseUrl + 'gpio/task/' + id, { 
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json'}
             })
             return data?.json()
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return {
+                isSuccess: false,
+                message: `Delete Task error: ${e.message}`
+            }
         }
     }
 
@@ -76,15 +87,37 @@ export default class MainController {
 */
     assignToTask = async assignJson => {
         try{
-            const data = await fetch(this.baseUrl + 'gpio/assign', { 
+            const data = await fetch(this.baseUrl + 'gpio/task/assign', { 
                 method: 'POST',
                 headers: { 'Content-type': 'application/json'},
-                body: assignJson
+                body: JSON.stringify(assignJson)
             })
             return data?.json()
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return {
+                isSuccess: false,
+                message: `Assign Task error: ${e.message}`
+            }
+        }
+    }
+
+    unassignFromTask = async unassignJson => {
+        try{
+            const data = await fetch(this.baseUrl + 'gpio/task/unassign', { 
+                method: 'POST',
+                headers: { 'Content-type': 'application/json'},
+                body: JSON.stringify(unassignJson)
+            })
+            return data?.json()
+        }
+        catch(e){
+            console.error(e.message)
+            return {
+                isSuccess: false,
+                message: `Unassign Task error: ${e.message}`
+            }
         }
     }
 
@@ -231,10 +264,22 @@ export default class MainController {
                 headers: { 'Content-type': 'application/json'},
                 body: JSON.stringify(valve)
             })
-            return data?.json()
+            const result = await data?.json()
+            if (!result.isSuccess) {
+                console.error(result)
+                return result
+            }
+
+            console.log(result)
+
+            return result
         }
         catch (e) {
-            return e.message
+            console.log(e.message)
+            return {
+                isSuccess:  false,
+                message: `Add Valve error: ${e.message}`
+            }
         }
     }
 
@@ -245,11 +290,23 @@ export default class MainController {
                 headers: { 'Content-type': 'application/json'},
                 body: JSON.stringify(valve)
             })
-            return data?.json()
-        }
-        catch (e) {
-            return e.message
-        }
+            
+            const result = await data?.json()
+            if (!result.isSuccess) {
+                console.error(result)
+                return result
+            }
+
+            console.log(result)
+
+            return result
+        } catch (e) {
+            console.log(e.message)
+            return {
+                isSuccess:  false,
+                message: `Add Valve error: ${e.message}`
+            }
+        }    
     }
 
     deleteValve = async id => {
@@ -258,10 +315,21 @@ export default class MainController {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json'},
             })
-            return data?.json()
-        }
-        catch (e) {
-            return e.message
+            const result = await data?.json()
+            if (!result.isSuccess) {
+                console.error(result)
+                return result
+            }
+
+            console.log(result)
+
+            return result
+        } catch (e) {
+            console.log(e.message)
+            return {
+                isSuccess:  false,
+                message: `Delete Valve error: ${e.message}`
+            }
         }
     }
 
@@ -275,13 +343,16 @@ export default class MainController {
             const result = await data?.json()
             if (!result.isSuccess) {
                 console.error(result)
-                return []
+                return null
             }
 
-            return result
+            console.log(result)
+
+            return result.result
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return null
         }
     }
 
@@ -306,7 +377,7 @@ export default class MainController {
             const data = await fetch(this.baseUrl + 'gpio/pump', {
                 method: 'PATCH',
                 headers: { 'Content-type': 'application/json'},
-                body: pinNo
+                body: JSON.stringify(pinNo)
             })
     
             return data?.json()
@@ -399,31 +470,43 @@ export default class MainController {
                 headers: { 'Content-type': 'application/json'}
             })
     
-            return data?.json()
+            const settingsResult = await data?.json()
+            if (!settingsResult.isSuccess){
+                return null
+            }
+
+            return settingsResult.result
         }
         catch(e){
-            return e.message
+            console.error(e.message)
+            return null
         }
     }
 
 /*
-{
+[{
   "key": 'pumpStopDelay',
   "value": 3000
-}
+}]
 */
     setSettings = async settings => {
         try{
             const data = await fetch(this.baseUrl + 'gpio/settings', {
-                method: 'POST',
+                method: 'PATCH',
                 headers: { 'Content-type': 'application/json'},
-                body: settings
+                body: JSON.stringify(settings)
             })
     
-            return data?.json()
+            const message = await data?.json()
+            return message
         }
         catch(e){
-            return e.message
+            const message = `Error update settings: ${e.message}`
+            console.error(message)
+            return {
+                isSuccess: false, 
+                message: `Error update settings: ${e.message}`
+            }
         }
     }
 }
