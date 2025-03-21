@@ -25,13 +25,13 @@ const DeviceForm = ({ device }) => {
           name: values.name,
           pinNo: values.pinNo,
           type: values.type,
-        })
+        });
 
         if (updateResult) {
           setApiResult({
             message: `Update Valve error: ${updateResult?.message}`,
             severity: updateResult?.isSuccess ? "success" : "error",
-          })
+          });
           if (updateResult.isSuccess) {
             await dataManager.refreshValves();
           }
@@ -40,25 +40,36 @@ const DeviceForm = ({ device }) => {
         setApiResult({
           message: `Update Valve error: ${e.message}`,
           severity: "error",
-        })
+        });
       }
     } else {
       const addResult = await dataManager.addValve({
         name: values.name,
         pinNo: values.pinNo,
-      })
+      });
 
       if (addResult) {
         setApiResult({
           message: `Update Valve error: ${addResult.message}`,
           severity: addResult?.isSuccess ? "success" : "error",
-        })
+        });
         if (addResult.isSuccess) {
           await dataManager.refreshValves();
         }
       }
+
+      if (addResult?.isSuccess) {
+        formik.resetForm({
+          values: {
+            id: 0,
+            name: "",
+            pinNo: 0,
+            type: "",
+          },
+        });
+      }
     }
-  }
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -69,7 +80,7 @@ const DeviceForm = ({ device }) => {
     },
     validationSchema: validationSchema,
     onSubmit: onSubmit,
-  })
+  });
 
   return (
     <>
@@ -98,7 +109,7 @@ const DeviceForm = ({ device }) => {
         />
         <TextField
           label="GPIO pin"
-          type="numeric"
+          type="number"
           name="pinNo"
           value={formik.values.pinNo}
           onChange={formik.handleChange}
@@ -122,7 +133,7 @@ const DeviceForm = ({ device }) => {
         )}
       </Box>
     </>
-  )
-}
+  );
+};
 
 export default DeviceForm;

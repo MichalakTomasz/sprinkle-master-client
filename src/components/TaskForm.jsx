@@ -6,33 +6,35 @@ import {
   Select,
   MenuItem,
   Alert,
-} from "@mui/material";
-import { useFormik } from "formik";
-import Period from "../models/Period.js";
-import SimpleDevice from "./SimpleDevice.jsx";
-import { Delete } from "@mui/icons-material";
-import useDeviceStore from "../store/deviceStore";
-import { useEffect, useState } from "react";
-import container from "../container/container.js";
-import * as Yup from "yup";
+} from '@mui/material'
+import { useFormik } from 'formik'
+import Period from '../models/Period.js'
+import SimpleDevice from './SimpleDevice.jsx'
+import { Delete } from '@mui/icons-material'
+import useDeviceStore from '../store/deviceStore'
+import { useEffect, useState } from 'react'
+import container from '../container/container.js'
+import * as Yup from 'yup'
 
 const validationSchema = Yup.object({
-  name: Yup.string().required("Required"),
-});
+  name: Yup.string().required('Required'),
+  start: Yup.string().required('Required'),
+  stop: Yup.string().required('Required')
+})
 
 const TaskForm = ({ task }) => {
-  const dataManager = container.resolve("dataManager");
-  const isUpdate = task != undefined;
-  const valves = useDeviceStore((state) => state.valves || []);
-  const [selectedValve, setSelectedValve] = useState("");
-  const [currentDevices, setCurrentDevices] = useState([]);
-  const [apiResult, setApiResult] = useState(null);
+  const dataManager = container.resolve('dataManager')
+  const isUpdate = task != undefined
+  const valves = useDeviceStore((state) => state.valves || [])
+  const [selectedValve, setSelectedValve] = useState('')
+  const [currentDevices, setCurrentDevices] = useState([])
+  const [apiResult, setApiResult] = useState(null)
 
   useEffect(() => {
     if (task?.devices?.length > 0) {
-      setCurrentDevices([...task.devices]);
+      setCurrentDevices([...task.devices])
     }
-  }, []);
+  }, [])
 
   const onSubmit = async (values) => {
     if (isUpdate) {
@@ -43,12 +45,12 @@ const TaskForm = ({ task }) => {
         stop: values.stop,
         period: values.period,
         isActive: values.isActive,
-      });
+      })
 
       if (updateResult) {
         setApiResult({
           message: `Update Task error: ${updateResult?.message}`,
-          severity: updateResult?.isSuccess ? "success" : "error",
+          severity: updateResult?.isSuccess ? 'success' : 'error',
         })
       }
 
@@ -65,13 +67,13 @@ const TaskForm = ({ task }) => {
           const assignResult = await dataManager.assignToTask({
             valveId: deviceToAdd.id,
             taskId: task.id,
-          });
+          })
 
           if (assignResult) {
             setApiResult({
               message: `Add valve error: ${assignResult?.message}`,
-              severity: assignResult?.isSuccess ? "success" : "error",
-            });
+              severity: assignResult?.isSuccess ? 'success' : 'error',
+            })
           }
         }
       }
@@ -81,13 +83,13 @@ const TaskForm = ({ task }) => {
           const unassignResult = await dataManager.unassignFromTask({
             valveId: deviceToTelete.id,
             taskId: task.id,
-          });
+          })
 
           if (unassignResult) {
             setApiResult({
               message: `Add valve error: ${unassignResult?.message}`,
-              severity: unassignResult?.isSuccess ? "success" : "error",
-            });
+              severity: unassignResult?.isSuccess ? 'success' : 'error',
+            })
           }
         }
       }
@@ -103,7 +105,7 @@ const TaskForm = ({ task }) => {
       if (addResult) {
         setApiResult({
           message: `Add Task error: ${addResult?.message}`,
-          severity: addResult?.isSuccess ? "success" : "error",
+          severity: addResult?.isSuccess ? 'success' : 'error',
         })
       }
 
@@ -116,97 +118,116 @@ const TaskForm = ({ task }) => {
         if (assignResult) {
           setApiResult({
             message: `Add valve error: ${assignResult?.message}`,
-            severity: assignResult?.isSuccess ? "success" : "error",
+            severity: assignResult?.isSuccess ? 'success' : 'error',
           })
         }
       }
+
+      if (addResult?.isSuccess) {
+        setCurrentDevices([])
+        setSelectedValve('')
+        formik.resetForm({
+          values: {
+            id: 0,
+            name: '',
+            start: '',
+            stop: '',
+            period: Period.EVERYDAY,
+            isActive: false
+          }
+        })
+      }
     }
 
-    dataManager.refreshTasks();
+    dataManager.refreshTasks()
   }
 
   const onDeleteClick = async (deviceToDelete) => {
     const updatedDevices = currentDevices.filter(
       (d) => d.id !== deviceToDelete.id
-    );
-    setCurrentDevices(updatedDevices);
+    )
+    setCurrentDevices(updatedDevices)
   }
 
   const onChangeValveSelect = (event) => {
-    const selectedValveId = event.target.value;
-    const selectedValve = valves.find(v => v.id === selectedValveId);
-    setSelectedValve(selectedValve);
+    const selectedValveId = event.target.value
+    const selectedValve = valves.find(v => v.id === selectedValveId)
+    setSelectedValve(selectedValve)
   }
 
   const onClickAddValve = async () => {
     if (selectedValve) {
-      setCurrentDevices([...currentDevices, selectedValve]);
-      setSelectedValve("");
+      setCurrentDevices([...currentDevices, selectedValve])
+      setSelectedValve('')
     }
-  };
+  }
 
   const formik = useFormik({
     initialValues: {
       id: isUpdate ? task.id : 0,
-      name: isUpdate ? task.name : "",
-      start: isUpdate ? task.start : "",
-      stop: isUpdate ? task.stop : "",
+      name: isUpdate ? task.name : '',
+      start: isUpdate ? task.start : '',
+      stop: isUpdate ? task.stop : '',
       period: Period.EVERYDAY,
       isActive: isUpdate ? task?.isActive : false,
     },
     enableReinitialize: true,
     validationSchema: validationSchema,
     onSubmit: onSubmit,
-  });
+  })
 
   return (
     <>
       <Box
-        component="form"
+        component='form'
         onSubmit={formik.handleSubmit}
         sx={{
-          display: "flex",
-          flexDirection: "column",
+          display: 'flex',
+          flexDirection: 'column',
           gap: 2,
           padding: 2,
-          "& .MuiTextField-root": { width: "100%" },
+          '& .MuiTextField-root': { width: '100%' },
         }}
       >
         <TextField
-          label="Name"
-          type="text"
-          name="name"
+          label='Name'
+          type='text'
+          name='name'
           value={formik.values.name}
           onChange={formik.handleChange}
           error={formik.touched.name && formik.errors.name}
           helperText={formik.touched.name && formik.errors.name}
         />
         <TextField
-          label="Start Time"
-          type="time"
-          name="start"
+          label='Start Time'
+          type='time'
+          name='start'
           value={formik.values.start}
           onChange={formik.handleChange}
+          error={formik.touched.name && formik.errors.start}
+          helperText={formik.touched.name && formik.errors.start}
           InputLabelProps={{
             shrink: true,
           }}
         />
         <TextField
-          label="Stop Time"
-          type="time"
-          name="stop"
+          label='Stop Time'
+          type='time'
+          name='stop'
           value={formik.values.stop}
           onChange={formik.handleChange}
+          error={formik.touched.name && formik.errors.stop}
+          helperText={formik.touched.name && formik.errors.stop}
           InputLabelProps={{
             shrink: true,
           }}
         />
         <Box>
           {currentDevices?.map((device) => (
-            <Stack key={device.id} direction="row">
+            <Stack key={device.id} direction='row'>
               <SimpleDevice device={device} />
               <Button
-                variant="overlined"
+                variant='overlined'
                 onClick={() => onDeleteClick(device)}
                 startIcon={<Delete />}
               >
@@ -215,14 +236,14 @@ const TaskForm = ({ task }) => {
             </Stack>
           ))}
         </Box>
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction='row' spacing={2} alignItems='center'>
           <Select
             value={selectedValve ? selectedValve.id : ''}
             onChange={onChangeValveSelect}
             displayEmpty
             sx={{ minWidth: 200 }}
           >
-            <MenuItem value="" disabled>
+            <MenuItem value='' disabled>
               Select valve
             </MenuItem>
             {valves
@@ -234,28 +255,28 @@ const TaskForm = ({ task }) => {
               ))}
           </Select>
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={onClickAddValve}
             disabled={!selectedValve}
           >
             Add Valve
           </Button>
         </Stack>
-        <Button variant="outlined" type="submit">
-          {isUpdate ? "Update" : "Add"}
+        <Button variant='outlined' type='submit'>
+          {isUpdate ? 'Update' : 'Add'}
         </Button>
         {apiResult && (
           <Alert severity={apiResult.severity} sx={{ mt: 2 }}>
-            {apiResult.severity == "success"
+            {apiResult.severity == 'success'
               ? isUpdate
-                ? "Task updated successful."
-                : "Task added successful."
+                ? 'Task updated successful.'
+                : 'Task added successful.'
               : apiResult.message}
           </Alert>
         )}
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default TaskForm;
+export default TaskForm
