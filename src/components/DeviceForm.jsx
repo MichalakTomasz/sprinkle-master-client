@@ -66,10 +66,10 @@ const DeviceForm = ({ device }) => {
             pinNo: 0,
             type: "",
           },
-        });
+        })
       }
     }
-  };
+  }
 
   const formik = useFormik({
     initialValues: {
