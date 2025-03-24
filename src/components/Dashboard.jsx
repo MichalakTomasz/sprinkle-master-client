@@ -1,5 +1,4 @@
 import MainMenu from "./MainMenu.jsx";
-import MessageBar from "./MessageBar.jsx";
 import DeviceStatuses from "./DeviceStatuses.jsx";
 import OperationPanel from "./OperationPanel.jsx";
 import { Box, Stack, Typography, Button } from "@mui/material";
@@ -17,7 +16,7 @@ const Dashboard = () => {
     }
 
   return (
-    <Stack spacing={2}>
+    <Stack spacing={2} >
       <Stack direction='row'sx={{ justifyContent: "space-between", alignItems: 'center', mb: 2 }}>
         <Typography variant="h4">Dashboard</Typography>
         <Button variant="overlined" onClick={onClick} startIcon={<Settings size='large' sx={{ fontSize: 30}} /> }/>

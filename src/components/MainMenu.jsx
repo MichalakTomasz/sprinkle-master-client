@@ -3,6 +3,7 @@ import { Tab } from "@mui/material";
 import { TabContext, TabList, TabPanel } from "@mui/lab";
 import DevicePanel from "./DevicePanel.jsx"
 import TaskPanel from "./TaskPanel.jsx"
+
 const MainMenu = () => {
   const [value, setValue] = useState("1");
   const handleChange = (event, newValue) => setValue(newValue);
@@ -22,6 +23,5 @@ const MainMenu = () => {
     </TabContext>
   )
 }
-
 
 export default MainMenu;
