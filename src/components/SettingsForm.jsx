@@ -5,18 +5,25 @@ import {
   Switch,
   FormControlLabel,
   Alert,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl, // Dodaj import FormControl
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import container from "../container/container";
 import Settings from "../models/Settings.js";
+import themes from '../styles/themes.js'
+import useDeviceStore from "../store/deviceStore.js";
 
 const initialValues = {
   autostartScheduler: false,
   pumpStopDelay: 0,
   schedulerTick: 0,
   pumpPinNo: 0,
+  theme: ''
 };
 
 const validationSchema = Yup.object({
@@ -40,7 +47,9 @@ const validationSchema = Yup.object({
 const SettingsForm = () => {
   const dataManager = container.resolve("dataManager");
   const [formValues, setFormValues] = useState(initialValues);
-  const [apiResult, setApiResult] = useState(null);
+  const [apiResult, setApiResult] = useState(null)
+  const selectedThemeId = useDeviceStore(state => state.themeId)
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,13 +71,20 @@ const SettingsForm = () => {
           autostartScheduler: Boolean(autostartScheduler || false),
           pumpStopDelay: pumpStopDelay ? pumpStopDelay / 1000 : 0,
           schedulerTick: schedulerTick ? schedulerTick / 1000 : 0,
-          pumpPinNo: pumpResult?.pinNo || 0,
+          pumpPinNo: pumpResult?.pinNo || 0
         });
       }
     };
 
+
     fetchData();
-  }, [dataManager]);
+  }, [])
+
+  const onChangeTheme = (event) => {
+    const selectedThemeId = event.target.value
+    const theme = themes.find(t => t.id == selectedThemeId)
+    useDeviceStore.getState().setThemeId(theme.id)
+  }
 
   const onSubmit = async (values) => {
     try {
@@ -181,6 +197,24 @@ const SettingsForm = () => {
             shrink: true,
           }}
         />
+        <FormControl fullWidth>
+          <InputLabel id="theme-label">Theme</InputLabel>
+          <Select
+            labelId="theme-label"
+            label="Theme"
+            value={selectedThemeId}
+            onChange={onChangeTheme}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          >
+            {themes.map((t) => (
+              <MenuItem key={t.id} value={t.id}>
+                {t.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <Button variant="outlined" type="submit">
           Update
         </Button>

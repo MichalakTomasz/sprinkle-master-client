@@ -6,6 +6,7 @@ const useDeviceStore = create((set) => ({
     tasks: [],
     deviceStates: {},
     isSchedulerEnabled: false,
+    themeId: 1,
           
     setValves: (valves) => set({ valves }),
     setPump: (pump) => set({ pump }),
@@ -25,7 +26,8 @@ const useDeviceStore = create((set) => ({
             [deviceId]: state
         }
     })),
-    setIsSchedulerEnabled: (isEnabled) => set({isSchedulerEnabled: isEnabled})
+    setIsSchedulerEnabled: (isEnabled) => set({isSchedulerEnabled: isEnabled}),
+    setThemeId: themeId => set({themeId : themeId})
 }))
 
 export default useDeviceStore

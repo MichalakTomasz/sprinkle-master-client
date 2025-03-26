@@ -18,7 +18,7 @@ const Dashboard = () => {
   return (
     <Stack spacing={2} >
       <Stack direction='row'sx={{ justifyContent: "space-between", alignItems: 'center', mb: 2 }}>
-        <Typography variant="h4">Dashboard</Typography>
+        <Typography variant="h4" sx={{ fontWeight: 'bold', fontStyle: 'italic'}}>Dashboard</Typography>
         <Button variant="overlined" onClick={onClick} startIcon={<Settings size='large' sx={{ fontSize: 30}} /> }/>
         <SettingsDialog open={open} onClose={handleClose}/>
       </Stack>

@@ -4,8 +4,7 @@ export const buildTheme = themeColors => createTheme({
   palette: {
     text: {
       primary: themeColors.textColor,
-      disabled: '#f50a31'
-    }    
+    },   
   },
   components: {
     MuiCssBaseline: {
@@ -26,20 +25,45 @@ export const buildTheme = themeColors => createTheme({
         }        
       }
     },
+    MuiButton: {
+      styleOverrides:{
+          root: {
+            borderColor: themeColors.borderColor,
+            color: themeColors.textColor
+          }
+      }
+    },
     MuiSwitch: {
       styleOverrides: {
         track: {
-          border: `2px solid ${themeColors.textColor}`
-        }
+          border: `2px solid ${themeColors.textColor}`,
+          backgroundColor: themeColors.textColor,
+          '&.Mui-checked': {
+            backgroundColor: themeColors.textColor, // Kolor tła przełącznika w stanie zaznaczonym
+          },
+        },
+        switchBase: {
+          color: themeColors.textColor,
+          '&.Mui-checked': {
+            color: themeColors.textColor, // Kolor przełącznika w stanie zaznaczonym
+          },
+        },
       }
     },
     MuiTab: {
       styleOverrides: {
         root: {
           color: themeColors.textColor,
-          '& .Mui-selected:': {
-            color: themeColors.selectedElement
+          '&.Mui-selected': {
+            color: themeColors.textColor
           }
+        }
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        indicator: {
+            backgroundColor:  themeColors.textColor
         }
       }
     },
@@ -61,13 +85,12 @@ export const buildTheme = themeColors => createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
+          '&.MuiOutlinedInput-root': {
             '& fieldset': {
               borderColor: themeColors.borderColor
             }         
           },
         }
-
       }
     },
     MuiInputLabel: {
@@ -87,13 +110,16 @@ export const buildTheme = themeColors => createTheme({
             borderColor: themeColors.borderColor, // Kolor ramki w stanie hover
           },
           '&.Mui-focused': {
-            borderColor: '#d32f2f', // Kolor ramki w stanie focus
+            borderColor: themeColors.border, // Kolor ramki w stanie focus
           },
         },
       },
     },
     MuiSelect: {
       styleOverrides: {
+        root: {
+          color: themeColors.textColor
+        },
         select: {
           color: themeColors.textColor
         },
