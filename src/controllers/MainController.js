@@ -13,7 +13,6 @@ export default class MainController {
     
             const result = await data?.json()
             if (!Array.isArray(result)) {
-                console.error(result)
                 return []
             }
 
@@ -68,6 +67,7 @@ export default class MainController {
                 method: 'DELETE',
                 headers: { 'Content-type': 'application/json'}
             })
+
             return data?.json()
         }
         catch(e){
@@ -92,6 +92,7 @@ export default class MainController {
                 headers: { 'Content-type': 'application/json'},
                 body: JSON.stringify(assignJson)
             })
+
             return data?.json()
         }
         catch(e){
@@ -154,7 +155,6 @@ export default class MainController {
             })
             const setTaskStateResult = await data?.json()
             if (!setTaskStateResult?.isSuccess) {
-                console.error(setTaskStateResult.message)
                 return false
             }
             return true
@@ -173,7 +173,6 @@ export default class MainController {
             })
             const getValveStateResult = await data?.json()
             if (!getValveStateResult?.isSuccess) {
-                console.error(getValveStateResult.message)
                 return false
             }
 
@@ -239,7 +238,6 @@ export default class MainController {
     
             const result = await data?.json()
             if (!Array.isArray(result)) {
-                console.error(result)
                 return []
             }
 
@@ -266,11 +264,8 @@ export default class MainController {
             })
             const result = await data?.json()
             if (!result.isSuccess) {
-                console.error(result)
                 return result
             }
-
-            console.log(result)
 
             return result
         }
@@ -293,11 +288,8 @@ export default class MainController {
             
             const result = await data?.json()
             if (!result.isSuccess) {
-                console.error(result)
                 return result
             }
-
-            console.log(result)
 
             return result
         } catch (e) {
@@ -317,11 +309,8 @@ export default class MainController {
             })
             const result = await data?.json()
             if (!result.isSuccess) {
-                console.error(result)
                 return result
             }
-
-            console.log(result)
 
             return result
         } catch (e) {
@@ -342,11 +331,8 @@ export default class MainController {
     
             const result = await data?.json()
             if (!result.isSuccess) {
-                console.error(result)
                 return null
             }
-
-            console.log(result)
 
             return result.result
         }
@@ -410,7 +396,6 @@ export default class MainController {
     
             const result = await data?.json()
             if (!result.isSuccess) {
-                console.error(result.message)
                 return false
             }
             return result.result
@@ -430,7 +415,6 @@ export default class MainController {
     
             const runResult = await data?.json()
             if (!runResult.isSuccess){
-                console.error(runResult.message)
                 return false
             }
 
@@ -451,7 +435,6 @@ export default class MainController {
     
             const stopResult = await data?.json()
             if (!stopResult.isSuccess){
-                console.error(stopResult.message)
                 return false
             }
 

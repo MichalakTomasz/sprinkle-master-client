@@ -1,4 +1,4 @@
-const themes = [
+const styles = [
     {
         id: 1,
         name: 'Dark',
@@ -41,4 +41,4 @@ const themes = [
         selectedElement: '#e9f50a'
     }]
 
-export default themes
+export default styles

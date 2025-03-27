@@ -15,7 +15,7 @@ import * as Yup from "yup";
 import { useEffect, useState } from "react";
 import container from "../container/container";
 import Settings from "../models/Settings.js";
-import themes from '../styles/themes.js'
+import themes from '../styles/styles.js'
 import useDeviceStore from "../store/deviceStore.js";
 
 const initialValues = {
@@ -56,6 +56,7 @@ const SettingsForm = () => {
       const settingsResult = await dataManager.getSettings();
       const pumpResult = await dataManager.getPump();
 
+      let formValues = {}
       if (settingsResult) {
         const autostartScheduler = settingsResult?.find(
           (s) => s.key == Settings.autostartScheduler
@@ -67,15 +68,17 @@ const SettingsForm = () => {
           (s) => s.key == Settings.schedulerTick
         )?.value;
 
-        setFormValues({
+        formValues = {
           autostartScheduler: Boolean(autostartScheduler || false),
           pumpStopDelay: pumpStopDelay ? pumpStopDelay / 1000 : 0,
           schedulerTick: schedulerTick ? schedulerTick / 1000 : 0,
           pumpPinNo: pumpResult?.pinNo || 0
-        });
+        }
+        setFormValues(formValues)
       }
+      formValues.ipAddress = localStorage.getItem('ipAddress') || ''
+      setFormValues(formValues)
     };
-
 
     fetchData();
   }, [])
@@ -88,6 +91,9 @@ const SettingsForm = () => {
 
   const onSubmit = async (values) => {
     try {
+      if (values.ipAddress){
+        localStorage.setItem('ipAddress', values.ipAddress)
+      }
       setApiResult(null);
       const setSettingsResult = await dataManager.setSettings([
         { key: Settings.autostartScheduler, value: values.autostartScheduler },
@@ -152,6 +158,22 @@ const SettingsForm = () => {
             />
           }
           label="Autostart Scheduler"
+        />
+        <TextField
+          label="Use specific IP address"
+          type="text"
+          name="ipAddress"
+          value={formik.values.ipAddress}
+          onChange={formik.handleChange}
+          error={
+            formik.touched.ipAddress && Boolean(formik.errors.idAddress)
+          }
+          helperText={
+            formik.touched.ipAddress && formik.errors.ipAddress
+          }
+          InputLabelProps={{
+            shrink: true,
+          }}
         />
         <TextField
           label="Pump stop delay"

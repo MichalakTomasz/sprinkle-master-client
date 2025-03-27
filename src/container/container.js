@@ -4,8 +4,10 @@ import DataManager from '../services/DataManager.js'
 
 const container = createContainer()
 
+const ipAddress = localStorage.getItem('ipAddress')
+
 container.register({
-  config: asValue({ baseUrl: 'http://sprinkle-master:3200/' }),
+  config: asValue({ baseUrl: ipAddress ? `http://${ipAddress}/` : 'http://sprinkle-master:3200/' }),
   mainController: asClass(MainController).singleton(),
   dataManager: asClass(DataManager).singleton()
 })
