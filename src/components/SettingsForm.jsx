@@ -76,8 +76,6 @@ const SettingsForm = () => {
         }
         setFormValues(formValues)
       }
-      formValues.ipAddress = localStorage.getItem('ipAddress') || ''
-      setFormValues(formValues)
     };
 
     fetchData();
@@ -91,9 +89,6 @@ const SettingsForm = () => {
 
   const onSubmit = async (values) => {
     try {
-      if (values.ipAddress){
-        localStorage.setItem('ipAddress', values.ipAddress)
-      }
       setApiResult(null);
       const setSettingsResult = await dataManager.setSettings([
         { key: Settings.autostartScheduler, value: values.autostartScheduler },
@@ -158,22 +153,6 @@ const SettingsForm = () => {
             />
           }
           label="Autostart Scheduler"
-        />
-        <TextField
-          label="Use specific IP address"
-          type="text"
-          name="ipAddress"
-          value={formik.values.ipAddress}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.ipAddress && Boolean(formik.errors.idAddress)
-          }
-          helperText={
-            formik.touched.ipAddress && formik.errors.ipAddress
-          }
-          InputLabelProps={{
-            shrink: true,
-          }}
         />
         <TextField
           label="Pump stop delay"

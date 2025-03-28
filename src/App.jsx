@@ -1,4 +1,4 @@
-import Nav from './components/Nav'
+import Dashboard from './components/Dashboard.jsx'
 import { Box } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
@@ -22,7 +22,7 @@ const App = () => {
       <>
         <CssBaseline />
         <Box sx={{ width: '100%'}}>
-          <Nav/>
+          <Dashboard/>
         </Box>
       </>
     </ThemeProvider>

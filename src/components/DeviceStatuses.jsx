@@ -1,4 +1,4 @@
-import { Card, CardContent, Stack } from "@mui/material";
+import { Card, CardContent, Stack, Grid } from "@mui/material";
 import useDeviceStore from '../store/deviceStore.js'
 import DeviceState from "./DeviceState.jsx";
 import { useEffect } from "react";
@@ -20,14 +20,12 @@ const DeviceStatuses = () => {
   return (
     <Card>
       <CardContent>
-        <Stack spacing={2} direction='row' justifyContent="space-between">
-          <Stack spacing={2} direction="row">
+        <Stack spacing={2} direction='row'>
+          <Grid container spacing={2}>
             {valves?.map((valve) => (
-              <Stack key={valve.id} direction={"row"}>
-                <DeviceState device={valve} />
-              </Stack>
+                <DeviceState key={valve.id} device={valve} />
             ))}
-          </Stack>
+          </Grid>
           <DeviceState device={pump}/>
         </Stack>        
       </CardContent>

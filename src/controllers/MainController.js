@@ -1,7 +1,9 @@
+import getBaseUrl from "../services/baseUrlService"
+
 export default class MainController {
 
-    constructor({config}) {
-        this.baseUrl = config.baseUrl
+    constructor() {
+        this.baseUrl = getBaseUrl()
     }
 
     getTasks = async () => {
