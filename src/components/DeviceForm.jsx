@@ -1,8 +1,8 @@
-import { Box, TextField, Button, Alert } from "@mui/material";
-import { useFormik } from "formik";
-import { useState } from "react";
-import * as Yup from "yup";
-import container from "../container/container";
+import { Box, TextField, Button, Alert } from "@mui/material"
+import { useFormik } from "formik"
+import { useState, useRef, useEffect } from "react"
+import * as Yup from "yup"
+import container from "../container/container"
 
 const validationSchema = Yup.object({
   pinNo: Yup.number()
@@ -10,12 +10,17 @@ const validationSchema = Yup.object({
     .max(40, "GPIO has max 40 pins.")
     .required("Required"),
   name: Yup.string().required("Required"),
-});
+})
 
 const DeviceForm = ({ device }) => {
-  const isUpdate = device != undefined;
-  const dataManager = container.resolve("dataManager");
-  const [apiResult, setApiResult] = useState(null);
+  const isUpdate = device != undefined
+  const dataManager = container.resolve("dataManager")
+  const [apiResult, setApiResult] = useState(null)
+  const inputRef = useRef(null)
+
+  useEffect(() => {
+    inputRef.current?.focus()
+  }, [])
 
   const onSubmit = async (values) => {
     if (isUpdate) {
@@ -25,36 +30,36 @@ const DeviceForm = ({ device }) => {
           name: values.name,
           pinNo: values.pinNo,
           type: values.type,
-        });
+        })
 
         if (updateResult) {
           setApiResult({
             message: `Update Valve error: ${updateResult?.message}`,
             severity: updateResult?.isSuccess ? "success" : "error",
-          });
+          })
           if (updateResult.isSuccess) {
-            await dataManager.refreshValves();
+            await dataManager.refreshValves()
           }
         }
       } catch (e) {
         setApiResult({
           message: `Update Valve error: ${e.message}`,
           severity: "error",
-        });
+        })
       }
     } else {
       const addResult = await dataManager.addValve({
         name: values.name,
         pinNo: values.pinNo,
-      });
+      })
 
       if (addResult) {
         setApiResult({
           message: `Update Valve error: ${addResult.message}`,
           severity: addResult?.isSuccess ? "success" : "error",
-        });
+        })
         if (addResult.isSuccess) {
-          await dataManager.refreshValves();
+          await dataManager.refreshValves()
         }
       }
 
@@ -69,6 +74,7 @@ const DeviceForm = ({ device }) => {
         })
       }
     }
+    inputRef.current?.focus()
   }
 
   const formik = useFormik({
@@ -80,7 +86,7 @@ const DeviceForm = ({ device }) => {
     },
     validationSchema: validationSchema,
     onSubmit: onSubmit,
-  });
+  })
 
   return (
     <>
@@ -106,6 +112,7 @@ const DeviceForm = ({ device }) => {
           InputLabelProps={{
             shrink: true,
           }}
+          inputRef={inputRef}
         />
         <TextField
           label="GPIO pin"
@@ -133,7 +140,7 @@ const DeviceForm = ({ device }) => {
         )}
       </Box>
     </>
-  );
-};
+  )
+}
 
-export default DeviceForm;
+export default DeviceForm

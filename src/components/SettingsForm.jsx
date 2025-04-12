@@ -12,7 +12,7 @@ import {
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import container from "../container/container";
 import Settings from "../models/Settings.js";
 import themes from '../styles/styles.js'
@@ -49,7 +49,7 @@ const SettingsForm = () => {
   const [formValues, setFormValues] = useState(initialValues);
   const [apiResult, setApiResult] = useState(null)
   const selectedThemeId = useDeviceStore(state => state.themeId)
-  
+  const inputRef = useRef(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +79,7 @@ const SettingsForm = () => {
     };
 
     fetchData();
+    inputRef.current?.focus()
   }, [])
 
   const onChangeTheme = (event) => {
@@ -122,6 +123,7 @@ const SettingsForm = () => {
         severity: 'error'
       });
     }
+    inputRef.current?.focus()
   };
 
   const formik = useFormik({
@@ -169,6 +171,7 @@ const SettingsForm = () => {
           InputLabelProps={{
             shrink: true,
           }}
+          inputRef={inputRef}
         />
         <TextField
           label="Scheduler tick"

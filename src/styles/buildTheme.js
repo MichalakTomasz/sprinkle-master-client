@@ -29,8 +29,12 @@ export const buildTheme = themeColors => createTheme({
       styleOverrides:{
           root: {
             borderColor: themeColors.borderColor,
-            color: themeColors.textColor
-          }
+            color: themeColors.textColor,
+            '&.Mui-disabled': {
+              color: themeColors.disabledColor,
+              borderColor: themeColors.borderColor
+          },
+          },          
       }
     },
     MuiSwitch: {
@@ -88,8 +92,17 @@ export const buildTheme = themeColors => createTheme({
           '&.MuiOutlinedInput-root': {
             '& fieldset': {
               borderColor: themeColors.borderColor
-            }         
+            },     
           },
+          '& input[type="time"]::-webkit-calendar-picker-indicator': {
+            filter: 'invert(50%) sepia(100%) saturate(500%) hue-rotate(200deg) brightness(20%) contrast(20%)'
+          },
+          '& input[type=number]::-webkit-inner-spin-button': {
+            color: themeColors.textColor, // Zmień kolor strzałek
+          },
+          '& input[type=number]::-webkit-outer-spin-button': {
+            color: 'red', // Zmień kolor strzałek
+          },   
         }
       }
     },
@@ -145,6 +158,13 @@ export const buildTheme = themeColors => createTheme({
             color: themeColors.textColor, // Kolor tekstu zaznaczonego elementu
           },
           color: themeColors.textColor
+        },
+      },
+    },
+    MuiDialogContentText: {
+      styleOverrides: {
+        root: {
+          color: themeColors.textColor,
         },
       },
     },

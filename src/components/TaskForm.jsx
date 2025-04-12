@@ -12,7 +12,7 @@ import Period from '../models/Period.js'
 import SimpleDevice from './SimpleDevice.jsx'
 import { Delete } from '@mui/icons-material'
 import useDeviceStore from '../store/deviceStore'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import container from '../container/container.js'
 import * as Yup from 'yup'
 
@@ -29,11 +29,13 @@ const TaskForm = ({ task }) => {
   const [selectedValve, setSelectedValve] = useState('')
   const [currentDevices, setCurrentDevices] = useState([])
   const [apiResult, setApiResult] = useState(null)
+  const inputRef = useRef(null)
 
   useEffect(() => {
     if (task?.devices?.length > 0) {
       setCurrentDevices([...task.devices])
     }
+    inputRef.current?.focus()
   }, [])
 
   const onSubmit = async (values) => {
@@ -140,6 +142,7 @@ const TaskForm = ({ task }) => {
     }
 
     dataManager.refreshTasks()
+    inputRef.current?.focus()
   }
 
   const onDeleteClick = async (deviceToDelete) => {
@@ -197,6 +200,7 @@ const TaskForm = ({ task }) => {
           onChange={formik.handleChange}
           error={formik.touched.name && formik.errors.name}
           helperText={formik.touched.name && formik.errors.name}
+          inputRef={inputRef}
         />
         <TextField
           label='Start Time'
@@ -227,7 +231,7 @@ const TaskForm = ({ task }) => {
             <Stack key={device.id} direction='row'>
               <SimpleDevice device={device} />
               <Button
-                variant='overlined'
+                variant='outlined'
                 onClick={() => onDeleteClick(device)}
                 startIcon={<Delete />}
               >

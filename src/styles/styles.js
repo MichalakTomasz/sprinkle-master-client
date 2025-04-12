@@ -6,7 +6,8 @@ const styles = [
         borderColor: '#22292e',
         textColor: '#cbccd6',
         cardColor: '#14191c',
-        selectedElement: '#e9f50a'
+        selectedElement: '#e9f50a',
+        disabledColor: '#6e737a'
     }, {
         id: 2,
         name: 'Light grey',
@@ -14,7 +15,8 @@ const styles = [
         borderColor: '#bfc5c9',
         textColor: '#3c4042',
         cardColor: '#acb1b5',
-        selectedElement: '#e9f50a'
+        selectedElement: '#e9f50a',
+        disabledColor: '#6e737a'
     }, {
         id: 3,
         name: 'Dark blue',
@@ -22,7 +24,8 @@ const styles = [
         borderColor: '#1d2fa3',
         textColor: '#dadae0',
         cardColor: '#03020d',
-        selectedElement: '#ff5533'
+        selectedElement: '#ff5533',
+        disabledColor: '#6e737a'
     }, {
         id: 4,
         name: 'Green',
@@ -30,7 +33,8 @@ const styles = [
         borderColor: '#376608',
         textColor: '#010a01',
         cardColor: '#cacfc6',
-        selectedElement: '#e9f50a'
+        selectedElement: '#e9f50a',
+        disabledColor: '#6e737a'
     }, {
         id: 5,
         name: 'Grey',
@@ -38,7 +42,8 @@ const styles = [
         borderColor: '#aaacb3',
         textColor: '#cbccd6',
         cardColor: '#242426',
-        selectedElement: '#e9f50a'
+        selectedElement: '#e9f50a',
+        disabledColor: '#6e737a'
     }]
 
 export default styles
