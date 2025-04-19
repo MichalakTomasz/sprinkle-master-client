@@ -12,7 +12,7 @@ const App = () => {
   const themeId = useDeviceStore(state => state.themeId)
   
   useEffect(() => {
-    const selectedStyle = styles.find(s => s.id === themeId)
+    const selectedStyle = styles.find(s => s.id == themeId)
     const theme = buildTheme(selectedStyle)
     setTheme(theme)
   }, [themeId])

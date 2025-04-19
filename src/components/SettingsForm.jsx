@@ -21,7 +21,6 @@ import useDeviceStore from "../store/deviceStore.js";
 const initialValues = {
   autostartScheduler: false,
   pumpStopDelay: 0,
-  schedulerTick: 0,
   pumpPinNo: 0,
   theme: ''
 };
@@ -33,10 +32,6 @@ const validationSchema = Yup.object({
       "Delay between stop Pump and Valve can not be smaller than 0 seconds."
     )
     .max(5, "5 seconda is max delay between stop Pump and Valve.")
-    .required("Required"),
-  schedulerTick: Yup.number()
-    .min(1, "Must be greater than or equal to 1")
-    .max(60, "Must be less than or equal to 60")
     .required("Required"),
   pumpPinNo: Yup.number()
     .min(0, "Must be greater than or equal to 0")
@@ -64,14 +59,10 @@ const SettingsForm = () => {
         const pumpStopDelay = settingsResult?.find(
           (s) => s.key == Settings.pumpStopDelay
         )?.value;
-        const schedulerTick = settingsResult?.find(
-          (s) => s.key == Settings.schedulerTick
-        )?.value;
 
         formValues = {
           autostartScheduler: Boolean(autostartScheduler || false),
           pumpStopDelay: pumpStopDelay ? pumpStopDelay / 1000 : 0,
-          schedulerTick: schedulerTick ? schedulerTick / 1000 : 0,
           pumpPinNo: pumpResult?.pinNo || 0
         }
         setFormValues(formValues)
@@ -86,6 +77,7 @@ const SettingsForm = () => {
     const selectedThemeId = event.target.value
     const theme = themes.find(t => t.id == selectedThemeId)
     useDeviceStore.getState().setThemeId(theme.id)
+    localStorage.setItem('themeId', theme.id)
   }
 
   const onSubmit = async (values) => {
@@ -94,7 +86,6 @@ const SettingsForm = () => {
       const setSettingsResult = await dataManager.setSettings([
         { key: Settings.autostartScheduler, value: values.autostartScheduler },
         { key: Settings.pumpStopDelay, value: values.pumpStopDelay * 1000 },
-        { key: Settings.schedulerTick, value: values.schedulerTick * 1000 },
       ]);
 
       if (setSettingsResult) {
@@ -172,22 +163,6 @@ const SettingsForm = () => {
             shrink: true,
           }}
           inputRef={inputRef}
-        />
-        <TextField
-          label="Scheduler tick"
-          type="number"
-          name="schedulerTick"
-          value={formik.values.schedulerTick}
-          onChange={formik.handleChange}
-          error={
-            formik.touched.schedulerTick && Boolean(formik.errors.schedulerTick)
-          }
-          helperText={
-            formik.touched.schedulerTick && formik.errors.schedulerTick
-          }
-          InputLabelProps={{
-            shrink: true,
-          }}
         />
         <TextField
           label="Pump GPIO pin number"

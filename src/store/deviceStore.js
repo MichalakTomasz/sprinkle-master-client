@@ -6,7 +6,7 @@ const useDeviceStore = create((set) => ({
     tasks: [],
     deviceStates: {},
     isSchedulerEnabled: false,
-    themeId: 1,
+    themeId: localStorage.getItem('themeId') ?? 1,
           
     setValves: (valves) => set({ valves }),
     setPump: (pump) => set({ pump }),
