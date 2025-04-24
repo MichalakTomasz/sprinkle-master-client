@@ -17,9 +17,23 @@ import container from '../container/container.js'
 import * as Yup from 'yup'
 
 const validationSchema = Yup.object({
-  name: Yup.string().required('Required'),
+  name: Yup.string()
+  .required('Required'),
   start: Yup.string().required('Required'),
-  stop: Yup.string().required('Required')
+  stop: Yup.string()
+  .required('Required')
+  .when('start', (start, schema) => {
+    if (start) {
+      return schema.test({
+        test: (stop) => {
+          if (!stop) return true;
+          return start < stop;
+        },
+        message: 'Stop time must be later than start time'
+      });
+    }
+    return schema;
+  })
 })
 
 const TaskForm = ({ task }) => {

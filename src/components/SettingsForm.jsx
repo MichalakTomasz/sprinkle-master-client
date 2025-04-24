@@ -31,7 +31,7 @@ const validationSchema = Yup.object({
       0,
       "Delay between stop Pump and Valve can not be smaller than 0 seconds."
     )
-    .max(5, "5 seconda is max delay between stop Pump and Valve.")
+    .max(10, "10 seconda is max delay between stop Pump and close  last Valve.")
     .required("Required"),
   pumpPinNo: Yup.number()
     .min(0, "Must be greater than or equal to 0")

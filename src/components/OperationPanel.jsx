@@ -56,7 +56,13 @@ const OperationPanel = () => {
   return (
     <Card sx={{ p: 2 }}>
       <Stack direction="row" spacing={2}>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
           <Tooltip title="Enable/Disable task scheduler." placement="top">
             <Switch
               checked={isSchedulerEnabled}
@@ -65,7 +71,12 @@ const OperationPanel = () => {
           </Tooltip>
           <Typography>Scheduler</Typography>
         </Box>
-        <Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}>
           <Tooltip
             title="Enable/Disable weather service which predict whether it should water or not."
             placement="top"
