@@ -75,6 +75,12 @@ export class DataManager {
     getSettings = async () => await this.controller.getSettings()
     setSettings = async settings => await this.controller.setSettings(settings)
 
+    refreshUseWeatherAssistant = async () => {
+        const stateUseWeatherAssistant = await this.controller.getUseWeatherAssistant()
+        useDeviceStore.getState().setUseWeatherAssistant(stateUseWeatherAssistant?.value ?? false)
+    }
+    setUseWeatherAssistant = async useWeatherAssistant => await this.controller.setUseWeatherAssistant(useWeatherAssistant)
+    
     #initStateChecker = () => {
         repeatTask(this.#checkStateCallback, 1000)
     }

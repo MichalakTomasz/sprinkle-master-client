@@ -3,8 +3,8 @@ const Settings = {
     autostartScheduler: 'autostartScheduler',
     //Delay beetween close valves and turnoff the Pump - miliseconds
     pumpStopDelay: 'pumpStopDelay',
-    //Scheduler tick - miliseconds
-    schedulerTick: 'schedulerTick'
+    //Check weather if it should water the garden
+    useWeatherAssistant: 'useWeatherAssistant'
 }
 
 export default Settings

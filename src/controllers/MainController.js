@@ -1,4 +1,5 @@
-import getBaseUrl from "../services/baseUrlService"
+import getBaseUrl from '../services/baseUrlService.js'
+import Settings from '../models/Settings.js'
 
 export default class MainController {
 
@@ -7,12 +8,12 @@ export default class MainController {
     }
 
     getTasks = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/task', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const result = await data?.json()
             if (!Array.isArray(result)) {
                 return []
@@ -20,22 +21,22 @@ export default class MainController {
 
             return result
         }
-        catch(e) {
+        catch (e) {
             console.error(e.message)
             return []
         }
     }
 
     addTask = async (task) => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/task', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(task)
             })
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return {
                 isSuccess: false,
@@ -45,16 +46,16 @@ export default class MainController {
     }
 
     updateTask = async (task) => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/task', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(task)
             })
-    
+
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return {
                 isSuccess: false,
@@ -62,17 +63,17 @@ export default class MainController {
             }
         }
     }
-    
+
     deleteTask = async (id) => {
-        try{
-            const data = await fetch(this.baseUrl + 'gpio/task/' + id, { 
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/task/' + id, {
                 method: 'DELETE',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
 
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return {
                 isSuccess: false,
@@ -81,23 +82,23 @@ export default class MainController {
         }
     }
 
-/*
-{
-  taskId: 4,
-  valveId: 3
-}
-*/
+    /*
+    {
+      taskId: 4,
+      valveId: 3
+    }
+    */
     assignToTask = async assignJson => {
-        try{
-            const data = await fetch(this.baseUrl + 'gpio/task/assign', { 
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/task/assign', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(assignJson)
             })
 
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return {
                 isSuccess: false,
@@ -107,15 +108,15 @@ export default class MainController {
     }
 
     unassignFromTask = async unassignJson => {
-        try{
-            const data = await fetch(this.baseUrl + 'gpio/task/unassign', { 
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/task/unassign', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(unassignJson)
             })
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return {
                 isSuccess: false,
@@ -128,7 +129,7 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/task/state/', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
             const tasksStatesResult = await data?.json()
             if (!tasksStatesResult?.isSuccess) {
@@ -142,17 +143,17 @@ export default class MainController {
         }
     }
 
-/*
-{
-  "id": 4,
-  "state: "LOW"
-}
-*/
+    /*
+    {
+      "id": 4,
+      "state: "LOW"
+    }
+    */
     setTaskState = async stateJson => {
-        try{
-            const data = await fetch(this.baseUrl + 'gpio/task/state', { 
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/task/state', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(stateJson)
             })
             const setTaskStateResult = await data?.json()
@@ -161,7 +162,7 @@ export default class MainController {
             }
             return true
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return false
         }
@@ -171,7 +172,7 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/valve/state/' + id, {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
             const getValveStateResult = await data?.json()
             if (!getValveStateResult?.isSuccess) {
@@ -189,7 +190,7 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/state/' + pinNo, {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
             return data?.json()
         }
@@ -202,7 +203,7 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/valve/state', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(stateJson)
             })
             return data?.json()
@@ -216,7 +217,7 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/closeAll', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
             const closeAllResult = await data?.json()
             if (!closeAllResult.isSuccess) {
@@ -227,17 +228,17 @@ export default class MainController {
         }
         catch (e) {
             console.error(e.message)
-            return false            
+            return false
         }
     }
 
     getValves = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/valve', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const result = await data?.json()
             if (!Array.isArray(result)) {
                 return []
@@ -245,23 +246,23 @@ export default class MainController {
 
             return result
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return []
         }
     }
 
-/*
-{
-  "name": "zawor-1",
-  "pinNo": 27
-}
-*/
+    /*
+    {
+      "name": "zawor-1",
+      "pinNo": 27
+    }
+    */
     addValve = async (valve) => {
         try {
             const data = await fetch(this.baseUrl + 'gpio/valve', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(valve)
             })
             const result = await data?.json()
@@ -274,7 +275,7 @@ export default class MainController {
         catch (e) {
             console.log(e.message)
             return {
-                isSuccess:  false,
+                isSuccess: false,
                 message: `Add Valve error: ${e.message}`
             }
         }
@@ -284,10 +285,10 @@ export default class MainController {
         try {
             const data = await fetch(this.baseUrl + 'gpio/valve', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(valve)
             })
-            
+
             const result = await data?.json()
             if (!result.isSuccess) {
                 return result
@@ -297,17 +298,17 @@ export default class MainController {
         } catch (e) {
             console.log(e.message)
             return {
-                isSuccess:  false,
+                isSuccess: false,
                 message: `Add Valve error: ${e.message}`
             }
-        }    
+        }
     }
 
     deleteValve = async id => {
         try {
             const data = await fetch(this.baseUrl + 'gpio/valve/' + id, {
                 method: 'DELETE',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
             })
             const result = await data?.json()
             if (!result.isSuccess) {
@@ -318,19 +319,19 @@ export default class MainController {
         } catch (e) {
             console.log(e.message)
             return {
-                isSuccess:  false,
+                isSuccess: false,
                 message: `Delete Valve error: ${e.message}`
             }
         }
     }
 
     getPump = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/pump', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const result = await data?.json()
             if (!result.isSuccess) {
                 return null
@@ -338,7 +339,7 @@ export default class MainController {
 
             return result.result
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return null
         }
@@ -346,151 +347,192 @@ export default class MainController {
 
 
     addPump = async pinNoJson => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/pump', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: pinNoJson
             })
-    
+
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             return e.message
         }
     }
 
     updatePump = async pinNo => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/pump', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(pinNo)
             })
-    
+
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             return e.message
         }
     }
 
     deletePump = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/pump', {
                 method: 'DELETE',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             return data?.json()
         }
-        catch(e){
+        catch (e) {
             return e.message
         }
     }
 
     isSchedulerEnabled = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/isSchedulerEnabled', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const result = await data?.json()
             if (!result.isSuccess) {
                 return false
             }
             return result.result
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return false
         }
     }
 
     runScheduler = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/runScheduler', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const runResult = await data?.json()
-            if (!runResult.isSuccess){
+            if (!runResult.isSuccess) {
                 return false
             }
 
             return runResult.isEnabled
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return false
         }
     }
 
     stopScheduler = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/stopScheduler', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const stopResult = await data?.json()
-            if (!stopResult.isSuccess){
+            if (!stopResult.isSuccess) {
                 return false
             }
 
             return stopResult.isEnabled
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return false
         }
     }
 
     getSettings = async () => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/settings', {
                 method: 'GET',
-                headers: { 'Content-type': 'application/json'}
+                headers: { 'Content-type': 'application/json' }
             })
-    
+
             const settingsResult = await data?.json()
-            if (!settingsResult.isSuccess){
+            if (!settingsResult.isSuccess) {
                 return null
             }
 
             return settingsResult.result
         }
-        catch(e){
+        catch (e) {
             console.error(e.message)
             return null
         }
     }
 
-/*
-[{
-  "key": 'pumpStopDelay',
-  "value": 3000
-}]
-*/
+    /*
+    [{
+      "key": 'pumpStopDelay',
+      "value": 3000
+    }]
+    */
     setSettings = async settings => {
-        try{
+        try {
             const data = await fetch(this.baseUrl + 'gpio/settings', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json'},
+                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(settings)
             })
-    
-            const message = await data?.json()
-            return message
+
+            const result = await data?.json()
+            return result
         }
-        catch(e){
-            const message = `Error update settings: ${e.message}`
+        catch (e) {
+            const message = `Error fupdate settings: ${e.message}`
             console.error(message)
             return {
-                isSuccess: false, 
+                isSuccess: false,
                 message: `Error update settings: ${e.message}`
+            }
+        }
+    }
+
+    getUseWeatherAssistant = async () => {
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/settings/byKey/' + Settings.useWeatherAssistant, {
+                method: 'GET',
+                headers: { 'Content-type': 'application/json' },
+            })
+
+            const settingsResult = await data?.json()
+            if (!settingsResult.isSuccess) {
+                return null
+            }
+
+            return settingsResult.result
+        }
+        catch (e) {
+            console.error(e.message)
+            return null
+        }
+    }
+
+    setUseWeatherAssistant = async value => {
+        try {
+            const data = await fetch(this.baseUrl + 'gpio/settings', {
+                method: 'PATCH',
+                headers: { 'Content-type': 'application/json' },
+                body: JSON.stringify([{ key: Settings.useWeatherAssistant, value: value }])
+            })
+
+            const result = await data?.json()
+            return result
+        }
+        catch (e) {
+            const message = `Error updatae use weather assistant: ${e.message}`
+            console.error(message)
+            return {
+                isSuccess: false,
+                message: `Error update use weather assistant: ${e.message}`
             }
         }
     }

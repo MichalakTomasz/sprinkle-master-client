@@ -6,7 +6,8 @@ const useDeviceStore = create((set) => ({
     tasks: [],
     deviceStates: {},
     isSchedulerEnabled: false,
-    themeId: 1,
+    themeId: localStorage.getItem('themeId') ?? 1,
+    useWeatherAssistant: false,
           
     setValves: (valves) => set({ valves }),
     setPump: (pump) => set({ pump }),
@@ -27,7 +28,8 @@ const useDeviceStore = create((set) => ({
         }
     })),
     setIsSchedulerEnabled: (isEnabled) => set({isSchedulerEnabled: isEnabled}),
-    setThemeId: themeId => set({themeId : themeId})
+    setThemeId: themeId => set({themeId : themeId}),
+    setUseWeatherAssistant: (useWeatherAssistant) => set({useWeatherAssistant: useWeatherAssistant})
 }))
 
 export default useDeviceStore

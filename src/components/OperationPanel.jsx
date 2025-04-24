@@ -7,13 +7,15 @@ import useDeviceStore from "../store/deviceStore.js";
 const OperationPanel = () => {
   const dataManager = container.resolve('dataManager')
   const isSchedulerEnabled = useDeviceStore(state => state.isSchedulerEnabled)
+  const useWeatherAssistant = useDeviceStore(state => state.useWeatherAssistant)
   
   useEffect(() => {
-    const fetchIsSchedulerEnabled = async() => {
+    const fetchStates = async() => {
       await dataManager.refreshIsSchedulerEnabled()
+      await dataManager.refreshUseWeatherAssistant()
     }
     
-    fetchIsSchedulerEnabled()
+    fetchStates()
     
   }, [])
 
@@ -23,13 +25,22 @@ const OperationPanel = () => {
 
   const onSchedulerEnableChange = async () => {
     if (isSchedulerEnabled){
-      dataManager.stopScheduler()
+      await dataManager.stopScheduler()
     } else {
       await dataManager.runScheduler()
     }
     
     await dataManager.refreshIsSchedulerEnabled()
   };
+
+  const onUseWeatherAssistantChange = async () => {
+    if (useWeatherAssistant){
+      await dataManager.setUseWeatherAssistant(false)
+    } else {
+      await dataManager.setUseWeatherAssistant(true)
+    }
+    await dataManager.refreshUseWeatherAssistant()
+  }
 
   return (
     <Card sx={{ p: 2 }} >
@@ -40,6 +51,13 @@ const OperationPanel = () => {
             onChange={onSchedulerEnableChange}
           />
           <Typography>Scheduler</Typography>
+        </Box>
+        <Box>
+          <Switch
+            checked={useWeatherAssistant}
+            onChange={onUseWeatherAssistantChange}
+          />
+          <Typography>Weather assistant</Typography>
         </Box>
         <Button onClick={onCloseAllClick} variant="outlined" startIcon={<FlashOffIcon />} sx={{ m: 2 }}>
           Close all
