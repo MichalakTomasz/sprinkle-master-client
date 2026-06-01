@@ -1,17 +1,33 @@
 import getBaseUrl from '../services/baseUrlService.js'
 import Settings from '../models/Settings.js'
+import { getClientId } from '../helpers/clientIdHelper.js'
 
 export default class MainController {
 
     constructor() {
         this.baseUrl = getBaseUrl()
+        this.clientId = getClientId()
+    }
+
+    getRequestHeaders = (headers = {}) => ({
+        'Content-type': 'application/json',
+        clientId: this.clientId,
+        ...headers
+    })
+
+    request = (path, options = {}) => {
+        const { headers, ...restOptions } = options
+
+        return fetch(this.baseUrl + path, {
+            ...restOptions,
+            headers: this.getRequestHeaders(headers)
+        })
     }
 
     getTasks = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/task', {
+                method: 'GET'
             })
 
             const result = await data?.json()
@@ -29,9 +45,8 @@ export default class MainController {
 
     addTask = async (task) => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task', {
+            const data = await this.request('gpio/task', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(task)
             })
             return data?.json()
@@ -47,9 +62,8 @@ export default class MainController {
 
     updateTask = async (task) => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task', {
+            const data = await this.request('gpio/task', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(task)
             })
 
@@ -66,9 +80,8 @@ export default class MainController {
 
     deleteTask = async (id) => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task/' + id, {
-                method: 'DELETE',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/task/' + id, {
+                method: 'DELETE'
             })
 
             return data?.json()
@@ -90,9 +103,8 @@ export default class MainController {
     */
     assignToTask = async assignJson => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task/assign', {
+            const data = await this.request('gpio/task/assign', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(assignJson)
             })
 
@@ -109,9 +121,8 @@ export default class MainController {
 
     unassignFromTask = async unassignJson => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task/unassign', {
+            const data = await this.request('gpio/task/unassign', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(unassignJson)
             })
             return data?.json()
@@ -127,9 +138,8 @@ export default class MainController {
 
     getTasksStates = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task/state/', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/task/state/', {
+                method: 'GET'
             })
             const tasksStatesResult = await data?.json()
             if (!tasksStatesResult?.isSuccess) {
@@ -151,9 +161,8 @@ export default class MainController {
     */
     setTaskState = async stateJson => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/task/state', {
+            const data = await this.request('gpio/task/state', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(stateJson)
             })
             const setTaskStateResult = await data?.json()
@@ -170,9 +179,8 @@ export default class MainController {
 
     getValveState = async id => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve/state/' + id, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/valve/state/' + id, {
+                method: 'GET'
             })
             const getValveStateResult = await data?.json()
             if (!getValveStateResult?.isSuccess) {
@@ -188,9 +196,8 @@ export default class MainController {
 
     getPinState = async pinNo => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/state/' + pinNo, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/state/' + pinNo, {
+                method: 'GET'
             })
             return data?.json()
         }
@@ -201,9 +208,8 @@ export default class MainController {
 
     setValveState = async (stateJson) => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve/state', {
+            const data = await this.request('gpio/valve/state', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(stateJson)
             })
             return data?.json()
@@ -215,9 +221,8 @@ export default class MainController {
 
     closeAll = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/closeAll', {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/closeAll', {
+                method: 'POST'
             })
             const closeAllResult = await data?.json()
             if (!closeAllResult.isSuccess) {
@@ -234,9 +239,8 @@ export default class MainController {
 
     getValves = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/valve', {
+                method: 'GET'
             })
 
             const result = await data?.json()
@@ -260,9 +264,8 @@ export default class MainController {
     */
     addValve = async (valve) => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve', {
+            const data = await this.request('gpio/valve', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(valve)
             })
             const result = await data?.json()
@@ -283,9 +286,8 @@ export default class MainController {
 
     updateValve = async valve => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve', {
+            const data = await this.request('gpio/valve', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(valve)
             })
 
@@ -306,9 +308,8 @@ export default class MainController {
 
     deleteValve = async id => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/valve/' + id, {
-                method: 'DELETE',
-                headers: { 'Content-type': 'application/json' },
+            const data = await this.request('gpio/valve/' + id, {
+                method: 'DELETE'
             })
             const result = await data?.json()
             if (!result.isSuccess) {
@@ -327,9 +328,8 @@ export default class MainController {
 
     getPump = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/pump', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/pump', {
+                method: 'GET'
             })
 
             const result = await data?.json()
@@ -348,9 +348,8 @@ export default class MainController {
 
     addPump = async pinNoJson => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/pump', {
+            const data = await this.request('gpio/pump', {
                 method: 'POST',
-                headers: { 'Content-type': 'application/json' },
                 body: pinNoJson
             })
 
@@ -363,9 +362,8 @@ export default class MainController {
 
     updatePump = async pinNo => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/pump', {
+            const data = await this.request('gpio/pump', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(pinNo)
             })
 
@@ -378,9 +376,8 @@ export default class MainController {
 
     deletePump = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/pump', {
-                method: 'DELETE',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/pump', {
+                method: 'DELETE'
             })
 
             return data?.json()
@@ -392,9 +389,8 @@ export default class MainController {
 
     isSchedulerEnabled = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/isSchedulerEnabled', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/isSchedulerEnabled', {
+                method: 'GET'
             })
 
             const result = await data?.json()
@@ -411,9 +407,8 @@ export default class MainController {
 
     runScheduler = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/runScheduler', {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/runScheduler', {
+                method: 'POST'
             })
 
             const runResult = await data?.json()
@@ -431,9 +426,8 @@ export default class MainController {
 
     stopScheduler = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/stopScheduler', {
-                method: 'POST',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/stopScheduler', {
+                method: 'POST'
             })
 
             const stopResult = await data?.json()
@@ -451,9 +445,8 @@ export default class MainController {
 
     getSettings = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/settings', {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' }
+            const data = await this.request('gpio/settings', {
+                method: 'GET'
             })
 
             const settingsResult = await data?.json()
@@ -477,9 +470,8 @@ export default class MainController {
     */
     setSettings = async settings => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/settings', {
+            const data = await this.request('gpio/settings', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify(settings)
             })
 
@@ -498,9 +490,8 @@ export default class MainController {
 
     getUseWeatherAssistant = async () => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/settings/byKey/' + Settings.useWeatherAssistant, {
-                method: 'GET',
-                headers: { 'Content-type': 'application/json' },
+            const data = await this.request('gpio/settings/byKey/' + Settings.useWeatherAssistant, {
+                method: 'GET'
             })
 
             const settingsResult = await data?.json()
@@ -518,9 +509,8 @@ export default class MainController {
 
     setUseWeatherAssistant = async value => {
         try {
-            const data = await fetch(this.baseUrl + 'gpio/settings', {
+            const data = await this.request('gpio/settings', {
                 method: 'PATCH',
-                headers: { 'Content-type': 'application/json' },
                 body: JSON.stringify([{ key: Settings.useWeatherAssistant, value: value }])
             })
 

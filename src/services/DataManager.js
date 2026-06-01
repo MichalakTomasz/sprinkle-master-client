@@ -1,11 +1,13 @@
 import useDeviceStore from '../store/deviceStore.js'
 import convertPinState from '../helpers/convertPinState.js'
-import { repeatTask } from '../helpers/asyncHelper.js'
+import { createWebSocketMessageReceiver } from '../helpers/webSockedHelper.js'
+import { getClientId } from '../helpers/clientIdHelper.js'
 
 export class DataManager {
     constructor({ mainController }) {
         this.controller = mainController
-        this.#initStateChecker()
+        this.#refreshStateSnapshot()
+        this.#initStateListener()
     }
     
     refreshTasks = async () => {
@@ -80,16 +82,39 @@ export class DataManager {
         useDeviceStore.getState().setUseWeatherAssistant(stateUseWeatherAssistant?.value ?? false)
     }
     setUseWeatherAssistant = async useWeatherAssistant => await this.controller.setUseWeatherAssistant(useWeatherAssistant)
+
+    #buildWebSocketUrl = () => {
+        const targetUrl = new URL(this.controller.baseUrl)
+        targetUrl.protocol = targetUrl.protocol === 'https:' ? 'wss:' : 'ws:'
+
+        return targetUrl.toString()
+    }
     
-    #initStateChecker = () => {
-        repeatTask(this.#checkStateCallback, 1000)
+    #initStateListener = () => {
+        this.stateReceiver = createWebSocketMessageReceiver({
+            url: this.#buildWebSocketUrl(),
+            onMessage: event =>  this.#handleStateEvent(event),
+            onError: event => {
+                console.error('WebSocket state listener error', event)
+            },
+            onReconnect: () => {
+                this.#handleStateEvent()
+            }
+        })
+
+        this.stateReceiver.connect()
     }
 
-    #checkStateCallback = () => {
-        this.refreshPump()
-        this.refreshValves()
-        this.refreshTasks()
-        this.refreshIsSchedulerEnabled()
+    #handleStateEvent = async (event) => {
+        if (event.data?.clientId === getClientId()) 
+            return
+
+        await Promise.allSettled([
+            this.refreshPump(),
+            this.refreshValves(),
+            this.refreshTasks(),
+            this.refreshIsSchedulerEnabled(),
+        ])
     }
 }
 
