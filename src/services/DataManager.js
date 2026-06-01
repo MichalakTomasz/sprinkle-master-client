@@ -6,7 +6,6 @@ import { getClientId } from '../helpers/clientIdHelper.js'
 export class DataManager {
     constructor({ mainController }) {
         this.controller = mainController
-        this.#refreshStateSnapshot()
         this.#initStateListener()
     }
     
@@ -93,7 +92,7 @@ export class DataManager {
     #initStateListener = () => {
         this.stateReceiver = createWebSocketMessageReceiver({
             url: this.#buildWebSocketUrl(),
-            onMessage: event =>  this.#handleStateEvent(event),
+            onMessage: async event =>  await this.#handleStateEvent(event),
             onError: event => {
                 console.error('WebSocket state listener error', event)
             },
@@ -106,7 +105,8 @@ export class DataManager {
     }
 
     #handleStateEvent = async (event) => {
-        if (event.data?.clientId === getClientId()) 
+        const clientId = getClientId()
+        if (event.payload?.clientId === clientId) 
             return
 
         await Promise.allSettled([
