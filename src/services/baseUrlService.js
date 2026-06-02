@@ -1,9 +1,9 @@
 const getBaseUrl = () => {
-    const defaulUrl = 'http://sprinkle-master:3200/'
+    const defaulUrl = `${window.location.origin}/`
     let fieldValue = "";
    
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", '../../dist/ipAddress.json', false)
+    xhr.open("GET", '/ipAddress.json', false)
   try {
     xhr.send();
     if (xhr.status === 200) {
