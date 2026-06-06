@@ -2,6 +2,7 @@ import useDeviceStore from '../store/deviceStore.js'
 import convertPinState from '../helpers/convertPinState.js'
 import { createWebSocketMessageReceiver } from '../helpers/webSockedHelper.js'
 import { getClientId } from '../helpers/clientIdHelper.js'
+import webSocketMessageType from '../models/webSocketMessageType.js'
 
 export class DataManager {
     constructor({ mainController }) {
@@ -92,12 +93,13 @@ export class DataManager {
     #initStateListener = () => {
         this.stateReceiver = createWebSocketMessageReceiver({
             url: this.#buildWebSocketUrl(),
-            onMessage: async event =>  await this.#handleStateEvent(event),
+            onMessage: async event => 
+                await this.#handleStateEvent(event),
             onError: event => {
                 console.error('WebSocket state listener error', event)
             },
-            onReconnect: () => {
-                this.#handleStateEvent()
+            onReconnect: async event => {
+                await this.#handleStateEvent(event)
             }
         })
 
@@ -105,16 +107,56 @@ export class DataManager {
     }
 
     #handleStateEvent = async (event) => {
+        /*
         const clientId = getClientId()
         if (event.payload?.clientId === clientId) 
             return
-
-        await Promise.allSettled([
-            this.refreshPump(),
-            this.refreshValves(),
-            this.refreshTasks(),
-            this.refreshIsSchedulerEnabled(),
-        ])
+*/
+        switch (event.type) {
+        case webSocketMessageType.DeviceStatusChanged:
+        case webSocketMessageType.DeviceAdded:
+        case webSocketMessageType.DeviceUpdated:
+        case webSocketMessageType.DeviceDeleted:
+             case webSocketMessageType.AllValvesClosed:
+            await Promise.allSettled([
+                this.refreshPump(),
+                this.refreshValves()
+            ])
+            break
+        case webSocketMessageType.SchedulerStateChanged:
+            await this.refreshIsSchedulerEnabled()
+            break
+        case webSocketMessageType.TaskAdded:
+        case webSocketMessageType.TaskUpdated:
+        case webSocketMessageType.TaskDeleted:
+        case webSocketMessageType.ValveAssignedToTask:
+        case webSocketMessageType.ValveUnassignedFromTask:
+        case webSocketMessageType.TaskStatusChanged:
+            await this.refreshTasks()
+            break
+        case webSocketMessageType.SettingsKeyChanged:
+            await Promise.allSettled([
+                this.refreshIsSchedulerEnabled(),
+                this.refreshUseWeatherAssistant()
+            ])
+            break
+        case webSocketMessageType.CloseAllValvesCommand:
+            await Promise.allSettled([
+                this.refreshPump(),
+                this.refreshValves()
+            ])
+            break
+        case webSocketMessageType.Open:
+        case webSocketMessageType.Close:
+        default:
+            await Promise.allSettled([
+                this.refreshPump(),
+                this.refreshValves(),
+                this.refreshTasks(),
+                this.refreshIsSchedulerEnabled(),
+                this.refreshUseWeatherAssistant()
+            ])
+        }
     }
 }
 

@@ -1,5 +1,5 @@
 const getBaseUrl = () => {
-    const defaulUrl = `${window.location.origin}/`
+    const defaulUrl = `http://sprinkle-master:3200/`
     let fieldValue = "";
    
     const xhr = new XMLHttpRequest();
