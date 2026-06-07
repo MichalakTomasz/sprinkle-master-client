@@ -8,7 +8,7 @@ import {
   MenuItem,
   Select,
   InputLabel,
-  FormControl, // Dodaj import FormControl
+  FormControl, 
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -61,7 +61,7 @@ const SettingsForm = () => {
         )?.value;
 
         formValues = {
-          autostartScheduler: Boolean(autostartScheduler || false),
+          autostartScheduler: Boolean(Number(autostartScheduler)) || false,
           pumpStopDelay: pumpStopDelay ? pumpStopDelay / 1000 : 0,
           pumpPinNo: pumpResult?.pinNo || 0
         }
