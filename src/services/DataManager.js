@@ -9,7 +9,7 @@ export class DataManager {
         this.controller = mainController
         this.#initStateListener()
     }
-    
+
     refreshTasks = async () => {
         const result = await this.controller.getTasks()
         useDeviceStore.getState().setTasks(result)
@@ -20,7 +20,7 @@ export class DataManager {
     deleteTask = async id => await this.controller.deleteTask(id)
     assignToTask = async assignJson => await this.controller.assignToTask(assignJson)
     unassignFromTask = async assignJson => await this.controller.unassignFromTask(assignJson)
-    
+
     setTaskState = async stateJson => {
         const changeTaskStateResult = await this.controller.setTaskState(stateJson)
         if (changeTaskStateResult) {
@@ -42,7 +42,7 @@ export class DataManager {
     deleteValve = async id => await this.controller.deleteValve(id)
     closeAll = async () => {
         const closeAllResult = await this.controller.closeAll()
-        if (closeAllResult){
+        if (closeAllResult) {
             this.refreshPump()
             this.refreshValves()
         }
@@ -89,11 +89,11 @@ export class DataManager {
 
         return targetUrl.toString()
     }
-    
+
     #initStateListener = () => {
         this.stateReceiver = createWebSocketMessageReceiver({
             url: this.#buildWebSocketUrl(),
-            onMessage: async event => 
+            onMessage: async event =>
                 await this.#handleStateEvent(event),
             onError: event => {
                 console.error('WebSocket state listener error', event)
@@ -107,55 +107,55 @@ export class DataManager {
     }
 
     #handleStateEvent = async (event) => {
-        /*
+
         const clientId = getClientId()
-        if (event.payload?.clientId === clientId) 
+        if (event.payload?.clientId === clientId)
             return
-*/
+
         switch (event.type) {
-        case webSocketMessageType.DeviceStatusChanged:
-        case webSocketMessageType.DeviceAdded:
-        case webSocketMessageType.DeviceUpdated:
-        case webSocketMessageType.DeviceDeleted:
-             case webSocketMessageType.AllValvesClosed:
-            await Promise.allSettled([
-                this.refreshPump(),
-                this.refreshValves()
-            ])
-            break
-        case webSocketMessageType.SchedulerStateChanged:
-            await this.refreshIsSchedulerEnabled()
-            break
-        case webSocketMessageType.TaskAdded:
-        case webSocketMessageType.TaskUpdated:
-        case webSocketMessageType.TaskDeleted:
-        case webSocketMessageType.ValveAssignedToTask:
-        case webSocketMessageType.ValveUnassignedFromTask:
-        case webSocketMessageType.TaskStatusChanged:
-            await this.refreshTasks()
-            break
-        case webSocketMessageType.SettingsKeyChanged:
-            await Promise.allSettled([
-                this.refreshIsSchedulerEnabled(),
-                this.refreshUseWeatherAssistant()
-            ])
-            break
-        case webSocketMessageType.CloseAllValvesCommand:
-            await Promise.allSettled([
-                this.refreshPump(),
-                this.refreshValves()
-            ])
-            break
-        case webSocketMessageType.Open:
-        case webSocketMessageType.Close:
-        default:
-            await Promise.allSettled([
-                this.refreshPump(),
-                this.refreshValves(),
-                this.refreshTasks(),
-                this.refreshIsSchedulerEnabled(),
-                this.refreshUseWeatherAssistant()
-            ])
+            case webSocketMessageType.DeviceStatusChanged:
+            case webSocketMessageType.DeviceAdded:
+            case webSocketMessageType.DeviceUpdated:
+            case webSocketMessageType.DeviceDeleted:
+            case webSocketMessageType.AllValvesClosed:
+            case webSocketMessageType.TaskStatusChanged:
+                await Promise.allSettled([
+                    this.refreshPump(),
+                    this.refreshValves()
+                ])
+                break
+            case webSocketMessageType.SchedulerStateChanged:
+                await this.refreshIsSchedulerEnabled()
+                break
+            case webSocketMessageType.TaskAdded:
+            case webSocketMessageType.TaskUpdated:
+            case webSocketMessageType.TaskDeleted:
+            case webSocketMessageType.ValveAssignedToTask:
+            case webSocketMessageType.ValveUnassignedFromTask:
+                await this.refreshTasks()
+                break
+            case webSocketMessageType.SettingsKeyChanged:
+                await Promise.allSettled([
+                    this.refreshIsSchedulerEnabled(),
+                    this.refreshUseWeatherAssistant()
+                ])
+                break
+            case webSocketMessageType.CloseAllValvesCommand:
+                await Promise.allSettled([
+                    this.refreshPump(),
+                    this.refreshValves()
+                ])
+                break
+            case webSocketMessageType.Open:
+            case webSocketMessageType.Close:
+            default:
+                await Promise.allSettled([
+                    this.refreshPump(),
+                    this.refreshValves(),
+                    this.refreshTasks(),
+                    this.refreshIsSchedulerEnabled(),
+                    this.refreshUseWeatherAssistant()
+                ])
         }
     }
 }
