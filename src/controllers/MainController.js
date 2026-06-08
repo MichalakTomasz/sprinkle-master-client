@@ -1,4 +1,5 @@
 import getBaseUrl from '../services/baseUrlService.js'
+import notificationService from '../services/notificationService.js'
 import Settings from '../models/Settings.js'
 import { getClientId } from '../helpers/clientIdHelper.js'
 
@@ -24,13 +25,23 @@ export default class MainController {
         })
     }
 
+    readResponse = async response => {
+        const result = await response?.json()
+        notificationService.addResponseMessage(result)
+        return result
+    }
+
+    notifyError = message => {
+        notificationService.addErrorMessage(message)
+    }
+
     getTasks = async () => {
         try {
             const data = await this.request('gpio/task', {
                 method: 'GET'
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!Array.isArray(result)) {
                 return []
             }
@@ -49,10 +60,11 @@ export default class MainController {
                 method: 'POST',
                 body: JSON.stringify(task)
             })
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
             console.error(e.message)
+            this.notifyError(`Add Task error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Add Task error: ${e.message}`
@@ -67,10 +79,11 @@ export default class MainController {
                 body: JSON.stringify(task)
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
             console.error(e.message)
+            this.notifyError(`Update Task error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Update Task error: ${e.message}`
@@ -84,10 +97,11 @@ export default class MainController {
                 method: 'DELETE'
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
             console.error(e.message)
+            this.notifyError(`Delete Task error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Delete Task error: ${e.message}`
@@ -108,10 +122,11 @@ export default class MainController {
                 body: JSON.stringify(assignJson)
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
             console.error(e.message)
+            this.notifyError(`Assign Task error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Assign Task error: ${e.message}`
@@ -125,10 +140,11 @@ export default class MainController {
                 method: 'POST',
                 body: JSON.stringify(unassignJson)
             })
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
             console.error(e.message)
+            this.notifyError(`Unassign Task error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Unassign Task error: ${e.message}`
@@ -141,7 +157,7 @@ export default class MainController {
             const data = await this.request('gpio/task/state/', {
                 method: 'GET'
             })
-            const tasksStatesResult = await data?.json()
+            const tasksStatesResult = await this.readResponse(data)
             if (!tasksStatesResult?.isSuccess) {
                 console.error(tasksStatesResult.message)
                 return []
@@ -165,7 +181,7 @@ export default class MainController {
                 method: 'POST',
                 body: JSON.stringify(stateJson)
             })
-            const setTaskStateResult = await data?.json()
+            const setTaskStateResult = await this.readResponse(data)
             if (!setTaskStateResult?.isSuccess) {
                 return false
             }
@@ -182,7 +198,7 @@ export default class MainController {
             const data = await this.request('gpio/valve/state/' + id, {
                 method: 'GET'
             })
-            const getValveStateResult = await data?.json()
+            const getValveStateResult = await this.readResponse(data)
             if (!getValveStateResult?.isSuccess) {
                 return false
             }
@@ -199,9 +215,10 @@ export default class MainController {
             const data = await this.request('gpio/state/' + pinNo, {
                 method: 'GET'
             })
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
+            this.notifyError(e.message)
             return e.message
         }
     }
@@ -212,9 +229,10 @@ export default class MainController {
                 method: 'POST',
                 body: JSON.stringify(stateJson)
             })
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
+            this.notifyError(e.message)
             return e.message
         }
     }
@@ -224,7 +242,7 @@ export default class MainController {
             const data = await this.request('gpio/closeAll', {
                 method: 'POST'
             })
-            const closeAllResult = await data?.json()
+            const closeAllResult = await this.readResponse(data)
             if (!closeAllResult.isSuccess) {
                 console.error(closeAllResult.message)
                 return false
@@ -243,7 +261,7 @@ export default class MainController {
                 method: 'GET'
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!Array.isArray(result)) {
                 return []
             }
@@ -268,7 +286,7 @@ export default class MainController {
                 method: 'POST',
                 body: JSON.stringify(valve)
             })
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!result.isSuccess) {
                 return result
             }
@@ -277,6 +295,7 @@ export default class MainController {
         }
         catch (e) {
             console.log(e.message)
+            this.notifyError(`Add Valve error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Add Valve error: ${e.message}`
@@ -291,7 +310,7 @@ export default class MainController {
                 body: JSON.stringify(valve)
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!result.isSuccess) {
                 return result
             }
@@ -299,6 +318,7 @@ export default class MainController {
             return result
         } catch (e) {
             console.log(e.message)
+            this.notifyError(`Add Valve error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Add Valve error: ${e.message}`
@@ -311,7 +331,7 @@ export default class MainController {
             const data = await this.request('gpio/valve/' + id, {
                 method: 'DELETE'
             })
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!result.isSuccess) {
                 return result
             }
@@ -319,6 +339,7 @@ export default class MainController {
             return result
         } catch (e) {
             console.log(e.message)
+            this.notifyError(`Delete Valve error: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Delete Valve error: ${e.message}`
@@ -332,7 +353,7 @@ export default class MainController {
                 method: 'GET'
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!result.isSuccess) {
                 return null
             }
@@ -353,9 +374,10 @@ export default class MainController {
                 body: pinNoJson
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
+            this.notifyError(e.message)
             return e.message
         }
     }
@@ -367,9 +389,10 @@ export default class MainController {
                 body: JSON.stringify(pinNo)
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
+            this.notifyError(e.message)
             return e.message
         }
     }
@@ -380,9 +403,10 @@ export default class MainController {
                 method: 'DELETE'
             })
 
-            return data?.json()
+            return this.readResponse(data)
         }
         catch (e) {
+            this.notifyError(e.message)
             return e.message
         }
     }
@@ -393,7 +417,7 @@ export default class MainController {
                 method: 'GET'
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             if (!result.isSuccess) {
                 return false
             }
@@ -411,7 +435,7 @@ export default class MainController {
                 method: 'POST'
             })
 
-            const runResult = await data?.json()
+            const runResult = await this.readResponse(data)
             if (!runResult.isSuccess) {
                 return false
             }
@@ -430,7 +454,7 @@ export default class MainController {
                 method: 'POST'
             })
 
-            const stopResult = await data?.json()
+            const stopResult = await this.readResponse(data)
             if (!stopResult.isSuccess) {
                 return false
             }
@@ -449,7 +473,7 @@ export default class MainController {
                 method: 'GET'
             })
 
-            const settingsResult = await data?.json()
+            const settingsResult = await this.readResponse(data)
             if (!settingsResult.isSuccess) {
                 return null
             }
@@ -475,12 +499,13 @@ export default class MainController {
                 body: JSON.stringify(settings)
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             return result
         }
         catch (e) {
             const message = `Error fupdate settings: ${e.message}`
             console.error(message)
+            this.notifyError(`Error update settings: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Error update settings: ${e.message}`
@@ -494,7 +519,7 @@ export default class MainController {
                 method: 'GET'
             })
 
-            const settingsResult = await data?.json()
+            const settingsResult = await this.readResponse(data)
             if (!settingsResult.isSuccess) {
                 return null
             }
@@ -514,12 +539,13 @@ export default class MainController {
                 body: JSON.stringify([{ key: Settings.useWeatherAssistant, value: value }])
             })
 
-            const result = await data?.json()
+            const result = await this.readResponse(data)
             return result
         }
         catch (e) {
             const message = `Error updatae use weather assistant: ${e.message}`
             console.error(message)
+            this.notifyError(`Error update use weather assistant: ${e.message}`)
             return {
                 isSuccess: false,
                 message: `Error update use weather assistant: ${e.message}`

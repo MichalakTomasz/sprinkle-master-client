@@ -2,9 +2,14 @@ import { createTheme } from '@mui/material/styles';
 
 export const buildTheme = themeColors => createTheme({
   palette: {
+    background: {
+      default: themeColors.backgroundColor,
+      paper: themeColors.cardColor,
+    },
+    divider: themeColors.borderColor,
     text: {
       primary: themeColors.textColor,
-    },   
+    },
   },
   components: {
     MuiCssBaseline: {
@@ -23,6 +28,14 @@ export const buildTheme = themeColors => createTheme({
           borderRadius: '9px',
           color: themeColors.textColor
         }        
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: themeColors.cardColor,
+          color: themeColors.textColor,
+        }
       }
     },
     MuiButton: {

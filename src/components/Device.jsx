@@ -1,6 +1,8 @@
 import {
+  Box,
   CardContent,
   CardActions,
+  CircularProgress,
   Switch,
   Typography,
   Card,
@@ -19,6 +21,7 @@ const Device = ({ device }) => {
   const [open, setOpen] = useState(false);
   const [title, setTitle] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [isUpdatingState, setIsUpdatingState] = useState(false);
   
   const deviceState = useDeviceStore((state) => state.deviceStates[device.id] ?? false);
   const setDeviceState = useDeviceStore((state) => state.setDeviceState);
@@ -59,14 +62,24 @@ const Device = ({ device }) => {
   }
 
   const onPinStateChanged = async () => {
-    const getResult = await dataManager.setValveState({
-      id: device.id,
-      state: convertPinState(!deviceState)
-    });
-    
-    if (getResult.isSuccess) {
-      setDeviceState(device.id, convertPinState(getResult.result));
-      await dataManager.refreshPump(); 
+    if (isUpdatingState) {
+      return;
+    }
+
+    setIsUpdatingState(true);
+
+    try {
+      const getResult = await dataManager.setValveState({
+        id: device.id,
+        state: convertPinState(!deviceState)
+      });
+      
+      if (getResult.isSuccess) {
+        setDeviceState(device.id, convertPinState(getResult.result));
+        await dataManager.refreshPump();
+      }
+    } finally {
+      setIsUpdatingState(false);
     }
   };
 
@@ -78,10 +91,23 @@ const Device = ({ device }) => {
             {device.name}
           </Typography>
           <Typography variant="body1" sx={{ mb: 1.5 }}>
-            State: <Switch 
-                     checked={Boolean(deviceState)} 
-                     onChange={onPinStateChanged} 
-                   />
+            State:{" "}
+            <Box
+              component="span"
+              sx={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1,
+                cursor: isUpdatingState ? "progress" : "default",
+              }}
+            >
+              <Switch
+                checked={Boolean(deviceState)}
+                onChange={onPinStateChanged}
+                disabled={isUpdatingState}
+              />
+              {isUpdatingState && <CircularProgress size={16} />}
+            </Box>
           </Typography>
         </CardContent>
         <CardActions>

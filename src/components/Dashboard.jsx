@@ -4,6 +4,7 @@ import OperationPanel from "./OperationPanel.jsx";
 import { Box, Stack, Typography, Button } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import SettingsDialog from './SettingsDialog.jsx'
+import NotificationDock from './NotificationDock.jsx'
 import  {useState } from 'react'
 
 const Dashboard = () => {
@@ -16,7 +17,7 @@ const Dashboard = () => {
     }
 
   return (
-    <Stack spacing={2} >
+    <Stack spacing={2} sx={{ minHeight: '100vh', pb: '188px' }}>
       <Stack direction='row'sx={{ justifyContent: "space-between", alignItems: 'center', mb: 2 }}>
         <Typography variant="h4" sx={{ fontWeight: 'bold', fontStyle: 'italic'}}>Dashboard</Typography>
         <Button variant="overlined" onClick={onClick} startIcon={<Settings size='large' sx={{ fontSize: 30}} /> }/>
@@ -34,6 +35,7 @@ const Dashboard = () => {
           <MainMenu />
         </Box>
       </Stack>
+      <NotificationDock />
     </Stack>
   );
 };
