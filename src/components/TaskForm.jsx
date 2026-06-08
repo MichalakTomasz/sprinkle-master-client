@@ -6,6 +6,7 @@ import {
   Select,
   MenuItem,
   Alert,
+  FormHelperText,
 } from '@mui/material'
 import { useFormik } from 'formik'
 import Period from '../models/Period.js'
@@ -32,6 +33,7 @@ const validationSchema = Yup.object({
         message: 'Stop time must be later than start time'
       });
     }
+
     return schema;
   })
 })
@@ -43,6 +45,7 @@ const TaskForm = ({ task }) => {
   const [selectedValve, setSelectedValve] = useState('')
   const [currentDevices, setCurrentDevices] = useState([])
   const [apiResult, setApiResult] = useState(null)
+  const [devicesError, setDevicesError] = useState('')
   const inputRef = useRef(null)
 
   useEffect(() => {
@@ -53,6 +56,13 @@ const TaskForm = ({ task }) => {
   }, [])
 
   const onSubmit = async (values) => {
+    if (currentDevices.length === 0) {
+      setDevicesError('Add at least one valve to the task')
+      return
+    }
+
+    setDevicesError('')
+
     if (isUpdate) {
       const updateResult = await dataManager.updateTask({
         id: values.id,
@@ -164,6 +174,10 @@ const TaskForm = ({ task }) => {
       (d) => d.id !== deviceToDelete.id
     )
     setCurrentDevices(updatedDevices)
+
+    if (updatedDevices.length === 0) {
+      setDevicesError('Add at least one valve to the task')
+    }
   }
 
   const onChangeValveSelect = (event) => {
@@ -176,6 +190,7 @@ const TaskForm = ({ task }) => {
     if (selectedValve) {
       setCurrentDevices([...currentDevices, selectedValve])
       setSelectedValve('')
+      setDevicesError('')
     }
   }
 
@@ -260,6 +275,7 @@ const TaskForm = ({ task }) => {
             onChange={onChangeValveSelect}
             displayEmpty
             sx={{ minWidth: 200 }}
+            error={Boolean(devicesError)}
           >
             <MenuItem value='' disabled>
               Select valve
@@ -280,6 +296,7 @@ const TaskForm = ({ task }) => {
             Add Valve
           </Button>
         </Stack>
+        {devicesError && <FormHelperText error>{devicesError}</FormHelperText>}
         <Button variant='outlined' type='submit'>
           {isUpdate ? 'Update' : 'Add'}
         </Button>
