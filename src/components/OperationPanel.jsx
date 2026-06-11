@@ -8,12 +8,18 @@ import {
   Tooltip,
 } from "@mui/material"
 import FlashOffIcon from "@mui/icons-material/FlashOff"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import container from "../container/container"
 import useDeviceStore from "../store/deviceStore.js"
+import WeatherPrediction from "./WeatherPrediction.jsx"
 
 const OperationPanel = () => {
   const dataManager = container.resolve("dataManager")
+
+  const [open, setOpen] = useState(false)
+  const handleClose = () => {
+    setOpen(false)
+  }
   const isSchedulerEnabled = useDeviceStore(
     (state) => state.isSchedulerEnabled
   )
@@ -65,7 +71,7 @@ const OperationPanel = () => {
         >
           <Tooltip title="Enable/Disable task scheduler." placement="top">
             <Switch
-              checked={isSchedulerEnabled}
+              checked={Boolean(isSchedulerEnabled)}
               onChange={onSchedulerEnableChange}
             />
           </Tooltip>
@@ -82,7 +88,7 @@ const OperationPanel = () => {
             placement="top"
           >
             <Switch
-              checked={useWeatherAssistant}
+              checked={Boolean(useWeatherAssistant)}
               onChange={onUseWeatherAssistantChange}
             />
           </Tooltip>
@@ -98,6 +104,14 @@ const OperationPanel = () => {
             Close all
           </Button>
         </Tooltip>
+        <Button
+          onClick={() => setOpen(true)}
+          variant="outlined"
+          sx={{ m: 2 }}
+          >
+            Weather Prediction
+          </Button>
+        <WeatherPrediction open={open} onClose={handleClose} />
       </Stack>
     </Card>
   )

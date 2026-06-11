@@ -4,6 +4,14 @@ import { createWebSocketMessageReceiver } from '../helpers/webSockedHelper.js'
 import { getClientId } from '../helpers/clientIdHelper.js'
 import webSocketMessageType from '../models/webSocketMessageType.js'
 
+const normalizeBoolean = value => {
+    if (typeof value === 'string') {
+        return value.toLowerCase() === 'true'
+    }
+
+    return Boolean(value)
+}
+
 export class DataManager {
     constructor({ mainController }) {
         this.controller = mainController
@@ -63,7 +71,7 @@ export class DataManager {
 
     refreshIsSchedulerEnabled = async () => {
         const isEnabledResult = await this.controller.isSchedulerEnabled()
-        useDeviceStore.getState().setIsSchedulerEnabled(isEnabledResult)
+        useDeviceStore.getState().setIsSchedulerEnabled(normalizeBoolean(isEnabledResult))
     }
 
     runScheduler = async () => {
@@ -79,7 +87,7 @@ export class DataManager {
 
     refreshUseWeatherAssistant = async () => {
         const stateUseWeatherAssistant = await this.controller.getUseWeatherAssistant()
-        useDeviceStore.getState().setUseWeatherAssistant(stateUseWeatherAssistant?.value ?? false)
+        useDeviceStore.getState().setUseWeatherAssistant(normalizeBoolean(stateUseWeatherAssistant?.value))
     }
     setUseWeatherAssistant = async useWeatherAssistant => await this.controller.setUseWeatherAssistant(useWeatherAssistant)
 

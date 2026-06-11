@@ -500,6 +500,7 @@ export default class MainController {
             })
 
             const result = await this.readResponse(data)
+            
             return result
         }
         catch (e) {
@@ -540,6 +541,7 @@ export default class MainController {
             })
 
             const result = await this.readResponse(data)
+            
             return result
         }
         catch (e) {
@@ -550,6 +552,22 @@ export default class MainController {
                 isSuccess: false,
                 message: `Error update use weather assistant: ${e.message}`
             }
+        }
+    }
+
+    getWeatherPredictionOnline = async () => {
+        try {
+            const data = await this.request('gpio/checkWeatherPredictionOnline', {
+                method: 'GET'
+            })
+
+            const result = await this.readResponse(data)
+
+            return result
+        }
+        catch (e) {
+            this.notifyError(e.message)
+            return null
         }
     }
 }

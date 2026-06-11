@@ -5,7 +5,7 @@ import { Box, Stack, Typography, Button } from "@mui/material";
 import { Settings } from "@mui/icons-material";
 import SettingsDialog from './SettingsDialog.jsx'
 import NotificationDock from './NotificationDock.jsx'
-import  {useState } from 'react'
+import  { useState } from 'react'
 
 const Dashboard = () => {
     const [open, setOpen] = useState(false)

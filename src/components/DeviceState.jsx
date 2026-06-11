@@ -3,9 +3,10 @@ import CircleIndicator from './CircleIndicator'
 import useDeviceStore from '../store/deviceStore'
 
 const DeviceState = ({ device }) => {
+    const deviceId = device?.id
+    const deviceState = useDeviceStore(state => deviceId ? (state.deviceStates[deviceId] ?? false) : false)
+
     if (!device) return null;
-    
-    const deviceState = useDeviceStore(state => state.deviceStates[device.id] ?? false)
     
     return (
         <Card>
