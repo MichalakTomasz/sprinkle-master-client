@@ -54,6 +54,7 @@ const WeatherPrediction = ({ open, onClose }) => {
                         <Typography variant="h6">
                             Location: {weatherPredictionResult?.location ?? "Unknown"}
                         </Typography>
+                        <Typography>Date: {weatherPredictionResult?.date ?? "Unknown"}</Typography>
                         {weatherPredictionResult?.averageRain != null ? (
                             <Typography>
                                 Average Rain: {weatherPredictionResult.averageRain} mm/m2

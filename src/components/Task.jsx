@@ -79,7 +79,7 @@ const Task = ({ task }) => {
       start: task.start,
       stop: task.stop,
       period: task.period,
-      isActive: !isActiveState,
+      isActive: task.isActive = !isActiveState,
     });
 
     if (updateResult) {

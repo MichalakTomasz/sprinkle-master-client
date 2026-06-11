@@ -35,7 +35,8 @@ export const getWeatherPrediction = async () => {
             const averageRain = Math.round(rain.reduce((acc, r) => acc + r, 0) / rain.length, 0);
             return { 
                 averageRain,
-                location: formatLocation(response.location)
+                location: formatLocation(response.location),
+                date: `${new Date(response.date).toLocaleDateString()}`
             };
 
         } catch (error) {
