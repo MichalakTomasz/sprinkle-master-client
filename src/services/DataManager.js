@@ -6,7 +6,7 @@ import webSocketMessageType from '../models/webSocketMessageType.js'
 
 const normalizeBoolean = value => {
     if (typeof value === 'string') {
-        return value.toLowerCase() === 'true'
+        return value.toLowerCase() === 'true' || value === '1'
     }
 
     return Boolean(value)
