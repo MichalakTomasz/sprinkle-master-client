@@ -32,7 +32,7 @@ export const getWeatherPrediction = async () => {
                 return { message: 'No rain prediction available' };
             }
 
-            const averageRain = Math.round(rain.reduce((acc, r) => acc + r, 0) / rain.length, 0);
+            const averageRain = Math.round(rain.reduce((acc, r) => acc + r, 0), 0);
             return { 
                 averageRain,
                 location: formatLocation(response.location),
